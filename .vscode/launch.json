@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug with MinGW-w64",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/build/main.exe",  // Path to the compiled executable
+        "args": [],  // Command-line arguments for your program
+        "stopAtEntry": false,  // Set to true to break at the entry point
+        "cwd": "${workspaceFolder}",  // Working directory (usually the root of your project)
+        "environment": [],
+        "externalConsole": true,  // Use an external console for input/output
+        "MIMode": "gdb",  // Debugger (GDB for MinGW)
+        "miDebuggerPath": "C:/mingw-w64/bin/gdb.exe",  // Path to the GDB debugger
+        "preLaunchTask": "Build with MinGW-w64",  // Pre-build task (from tasks.json)
+        "serverStarted": "",
+        "filterStderr": false,
+        "filterStdout": false
+      }
+    ]
+  }
