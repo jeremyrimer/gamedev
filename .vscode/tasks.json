@@ -2,28 +2,34 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "CMake Build",
+            "label": "Build with MinGW-w64",
             "type": "shell",
-            "command": "powershell",
-            "args": [
-                "-Command",
-                "cmake -B build -S .; cmake --build build"
-            ],
+            "command": "mingw32-make",
+            "args": [],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": []
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Run mingw32-make in the build directory"
         },
         {
-            "label": "Run Game",
+            "label": "CMake Generate",
             "type": "shell",
-            "command": "${workspaceFolder}/build/game.exe",
-            "group": {
-                "kind": "test",
-                "isDefault": false
+            "command": "cmake",
+            "args": [
+                "-G",
+                "MinGW Makefiles",
+                ".."
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build"
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "detail": "Generate Makefile with CMake"
         }
     ]
 }

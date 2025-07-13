@@ -1,26 +1,26 @@
-cmake_minimum_required(VERSION 3.10)
-project(GameDev)
+cmake_minimum_required(VERSION 3.18)
+project(PixelEngine)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# Set the path to the GLFW library
-set(GLFW_PATH "C:/programming/libs/glfw-3.4")
+# Set to your real SDL3 base directory
+set(SDL3_ROOT "C:/programming/libs/SDL3-3.2.16/x86_64-w64-mingw32")
 
-# Add include directories
-include_directories(${GLFW_PATH}/include)
+# Add include and lib paths
+link_directories(${SDL3_ROOT}/bin)
 
-# Add source files
-set(SOURCES
-    src/game.cpp
-    src/loop.cpp
-)
+# Define code content
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*.cpp")
+add_executable(PixelEngine ${SRC_FILES})
 
-# Add the executable target
-add_executable(game ${SOURCES})
+target_include_directories(PixelEngine PRIVATE "${SDL3_ROOT}/include")
 
-# Link GLFW and OpenGL libraries
-target_link_libraries(game
-    ${GLFW_PATH}/build/src/libglfw3.a
-    opengl32
-    gdi32
+# Link to SDL3
+target_link_libraries(PixelEngine SDL3)
+
+# Copy DLL to build output
+add_custom_command(TARGET PixelEngine POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${SDL3_ROOT}/bin/SDL3.dll"
+    $<TARGET_FILE_DIR:PixelEngine>
 )
