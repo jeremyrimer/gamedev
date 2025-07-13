@@ -1,4 +1,6 @@
 #include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
+
 #include <iostream>
 #include "Engine.h"
 
@@ -11,10 +13,15 @@ void handleEvents(bool& running);
 void shutdown(SDL_Window* window, SDL_Renderer* renderer);
 
 int main(int argc, char* argv[]) {
+    std::cout << "Starting game...\n";
+
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
 
-    if (!init(window, renderer)) return 1;
+    if (!init(window, renderer)) {
+
+        return 1;
+    }
 
     bool running = true;
     while (running) {
@@ -29,16 +36,28 @@ int main(int argc, char* argv[]) {
 }
 
 bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
+    SDL_Surface* iconSurface = IMG_Load("assets/human_aimbot_profile_pic.png");  
+    if (!iconSurface) {
+        SDL_Log("IMG_LoadSurface failed: %s", SDL_GetError());
+        std::cerr << "[SDL3_IMAGE] Icon Initialization failed\n";
+        SDL_DestroySurface(iconSurface);
+        return false;
+    }
+
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "SDL3 Init failed: " << SDL_GetError() << "\n";
         return false;
     }
 
-    window = SDL_CreateWindow("SDL3 Pixel Engine", SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    window = SDL_CreateWindow("Human Aimbot", SCREEN_WIDTH, SCREEN_HEIGHT, 
+      SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED
+    );
     if (!window) {
         std::cerr << "Failed to create window: " << SDL_GetError() << "\n";
         return false;
     }
+    SDL_SetWindowIcon(window, iconSurface);
+    SDL_DestroySurface(iconSurface);
 
     renderer = SDL_CreateRenderer(window, nullptr);
     if (!renderer) {

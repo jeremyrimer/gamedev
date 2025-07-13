@@ -3,6 +3,7 @@ setlocal
 
 REM === CONFIGURE YOUR SDL3 LOCATION HERE ===
 set SDL3_PATH=C:\programming\libs\SDL3-3.2.16\x86_64-w64-mingw32
+set SDL3_IMAGE_PATH=C:\programming\libs\SDL_Image\build
 
 REM === Clean previous build ===
 echo Cleaning build folder...
@@ -29,8 +30,9 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 REM === Copy SDL3.dll if needed ===
-echo Copying SDL3.dll...
+echo Copying DLLs...
 copy "%SDL3_PATH%\lib\SDL3.dll" . >nul
+copy "%SDL3_IMAGE_PATH%\SDL3_image.dll" . >nul
 
 echo Build complete!
 cd ..
