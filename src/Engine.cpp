@@ -2,48 +2,41 @@
 #include "Engine.h"
 #include <SDL3/SDL.h>
 #include <iostream>
+#include <unordered_map>
 
+// Screen Settings
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
+// Player
 static int pixelX = SCREEN_WIDTH / 2;
 static int pixelY = SCREEN_HEIGHT / 2;
+static int MOVE_SPEED = 2;
 
-static const int MOVE_SPEED = 5; // pixels per key press
+// Keyboard Button States
+static std::unordered_map<SDL_Keycode, bool> keyStates;
 
 void handleInput(const SDL_Event& event) {
     if (event.type == SDL_EVENT_KEY_DOWN) {
-        switch (event.key.key) {
-            case SDLK_W:
-            case SDLK_UP:
-                std::cout << "KEY EVENT: UP" << std::endl;
-                pixelY -= MOVE_SPEED;
-                if (pixelY < 0) pixelY = 0;
-                break;
-            case SDLK_S:
-            case SDLK_DOWN:
-                std::cout << "KEY EVENT: DOWN" << std::endl;
-                pixelY += MOVE_SPEED;
-                if (pixelY > SCREEN_HEIGHT - 1) pixelY = SCREEN_HEIGHT - 1;
-                break;
-            case SDLK_A:
-            case SDLK_LEFT:
-                std::cout << "KEY EVENT: LEFT" << std::endl;
-                pixelX -= MOVE_SPEED;
-                if (pixelX < 0) pixelX = 0;
-                break;
-            case SDLK_D:
-            case SDLK_RIGHT:
-                std::cout << "KEY EVENT: RIGHT" << std::endl;
-                pixelX += MOVE_SPEED;
-                if (pixelX > SCREEN_WIDTH - 1) pixelX = SCREEN_WIDTH - 1;
-                break;
-        }
+        keyStates[event.key.key] = true;
+    } else if (event.type == SDL_EVENT_KEY_UP) {
+        keyStates[event.key.key] = false;
     }
 }
 
 void update() {
-    
+    if (keyStates[SDLK_UP]) {
+        pixelY = std::max(pixelY - MOVE_SPEED, 0);
+    }
+    if (keyStates[SDLK_DOWN]) {
+        pixelY = std::min(pixelY + MOVE_SPEED, SCREEN_HEIGHT - 1);
+    }
+    if (keyStates[SDLK_LEFT]) {
+        pixelX = std::max(pixelX - MOVE_SPEED, 0);
+    }
+    if (keyStates[SDLK_RIGHT]) {
+        pixelX = std::min(pixelX + MOVE_SPEED, SCREEN_WIDTH - 1);
+    }
 }
 
 void render(SDL_Renderer* renderer) {
