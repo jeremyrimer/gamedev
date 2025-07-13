@@ -64,6 +64,7 @@ bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
         std::cerr << "Failed to create renderer: " << SDL_GetError() << "\n";
         return false;
     }
+    SDL_SetRenderLogicalPresentation(renderer, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
     return true;
 }
