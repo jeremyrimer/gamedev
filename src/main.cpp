@@ -36,6 +36,7 @@ int main(int argc, char* argv[]) {
 }
 
 bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
+    // WINDOW setup
     SDL_Surface* iconSurface = IMG_Load("assets/human_aimbot_profile_pic.png");  
     if (!iconSurface) {
         SDL_Log("IMG_LoadSurface failed: %s", SDL_GetError());
@@ -59,11 +60,13 @@ bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
     SDL_SetWindowIcon(window, iconSurface);
     SDL_DestroySurface(iconSurface);
 
+    // RENDERER setup
     renderer = SDL_CreateRenderer(window, nullptr);
     if (!renderer) {
         std::cerr << "Failed to create renderer: " << SDL_GetError() << "\n";
         return false;
     }
+    SDL_SetRenderVSync(renderer, true);
     SDL_SetRenderLogicalPresentation(renderer, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
     return true;
