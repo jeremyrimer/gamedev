@@ -1,51 +1,47 @@
-// Engine.cpp
+#include "Constants.h"
 #include "Engine.h"
+#include "Player.h"
 #include <SDL3/SDL.h>
 #include <iostream>
 #include <unordered_map>
 
-// Screen Settings
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
 
-// Player
-static int pixelX = SCREEN_WIDTH / 2;
-static int pixelY = SCREEN_HEIGHT / 2;
-static int MOVE_SPEED = 2;
+// Player Object
+static Player* player;
 
 // Keyboard Button States
 static std::unordered_map<SDL_Keycode, bool> keyStates;
 
+void initPlayer(SDL_Renderer* renderer) {
+    player = new Player(renderer);
+}
+
 void handleInput(const SDL_Event& event) {
-    if (event.type == SDL_EVENT_KEY_DOWN) {
-        keyStates[event.key.key] = true;
-    } else if (event.type == SDL_EVENT_KEY_UP) {
+    if (event.type == SDL_EVENT_KEY_DOWN && event.key.repeat == 0) {
+        if (event.key.key == SDLK_ESCAPE) {
+            std::cout << "ESCAPE PRESSED; QUITTING..." << std::endl;
+            SDL_Event quitEvent;
+            quitEvent.type = SDL_EVENT_QUIT;
+            SDL_PushEvent(&quitEvent);
+        } else {
+            std::cout << SDL_GetScancodeName(event.key.scancode) << " PRESSED" << std::endl;
+            keyStates[event.key.key] = true;
+        }
+    } else if (event.type == SDL_EVENT_KEY_UP && event.key.repeat == 0) {
+        std::cout << SDL_GetScancodeName(event.key.scancode) << " RELEASED" << std::endl;
         keyStates[event.key.key] = false;
     }
 }
 
-void update() {
-    if (keyStates[SDLK_UP]) {
-        pixelY = std::max(pixelY - MOVE_SPEED, 0);
-    }
-    if (keyStates[SDLK_DOWN]) {
-        pixelY = std::min(pixelY + MOVE_SPEED, SCREEN_HEIGHT - 1);
-    }
-    if (keyStates[SDLK_LEFT]) {
-        pixelX = std::max(pixelX - MOVE_SPEED, 0);
-    }
-    if (keyStates[SDLK_RIGHT]) {
-        pixelX = std::min(pixelX + MOVE_SPEED, SCREEN_WIDTH - 1);
-    }
+void update(const bool* keystates) {
+    player->handleInput(keystates);
+    player->update(60.0f);
 }
 
 void render(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255); // Clear color
     SDL_RenderClear(renderer);
 
-    // Draw a white pixel at the center
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderPoint(renderer, pixelX, pixelY);
-
+    player->render(renderer);
     SDL_RenderPresent(renderer);
 }

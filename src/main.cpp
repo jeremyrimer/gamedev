@@ -19,14 +19,14 @@ int main(int argc, char* argv[]) {
     SDL_Renderer* renderer = nullptr;
 
     if (!init(window, renderer)) {
-
         return 1;
     }
 
     bool running = true;
     while (running) {
         handleEvents(running);
-        update();                // from Engine.cpp
+        const bool* keystates = SDL_GetKeyboardState(NULL);
+        update(keystates);           // from Engine.cpp
         render(renderer);        // from Engine.cpp
         SDL_Delay(16);           // ~60 FPS
     }
@@ -69,6 +69,7 @@ bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
     SDL_SetRenderVSync(renderer, true);
     SDL_SetRenderLogicalPresentation(renderer, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
+    initPlayer(renderer);
     return true;
 }
 

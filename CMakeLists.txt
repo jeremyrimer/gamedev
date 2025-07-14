@@ -18,7 +18,7 @@ add_executable(PixelEngine ${SRC_FILES})
 
 target_include_directories(PixelEngine PRIVATE 
   "${SDL3_ROOT}/include"
-  "${SDL3_IMAGE_ROOT}/include",
+  "${SDL3_IMAGE_ROOT}/include"
   "${PROJECT_SOURCE_DIR}/include"
 )
 

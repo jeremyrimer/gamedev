@@ -9,17 +9,17 @@ set SDL_DLL=build\SDL3.dll
 
 REM Check if exe exists
 if not exist "%EXE_PATH%" (
-    echo ❌ ERROR: PixelEngine.exe not found. Did you forget to build?
+    echo ERROR: PixelEngine.exe not found. Did you forget to build?
     pause
     exit /b 1
 )
 
 REM Check if SDL3.dll is present
 if not exist "%SDL_DLL%" (
-    echo ⚠️ WARNING: SDL3.dll not found next to exe. Game may not run.
+    echo WARNING: SDL3.dll not found next to exe. Game may not run.
 )
 
-echo ✅ Running PixelEngine...
+echo Running PixelEngine...
 echo ==========================
 echo.
 "%EXE_PATH%"
