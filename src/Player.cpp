@@ -25,7 +25,6 @@ Player::Player(SDL_Renderer* renderer) {
     startY = SCREEN_HEIGHT - 64;
 
     position = { static_cast<float>(startX), static_cast<float>(startY), 32, 32 };
-    speed = 200.0f;
     velocityX = 0.0f;
     acceleration = 1600.0f;   // pixels per second^2
     maxSpeed = 200.0f;       // top movement speed

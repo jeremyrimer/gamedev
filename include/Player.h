@@ -15,7 +15,6 @@ public:
 private:
     SDL_Texture* texture;
     SDL_FRect position;
-    float speed;
     
     float velocityX;
     float acceleration;
