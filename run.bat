@@ -26,5 +26,5 @@ echo.
 echo.
 echo ==========================
 echo Game exited.
-pause
+@REM pause
 endlocal
