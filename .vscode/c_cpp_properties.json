@@ -3,10 +3,11 @@
       {
         "name": "Win32",
         "includePath": [
-          "${workspaceFolder}/**",
+          "${workspaceFolder}/include",
+          "${workspaceFolder}/src",
           "${workspaceFolder}/../../libs/SDL3-3.2.16/x86_64-w64-mingw32/include",
-          "${workspaceFolder}/../../libs/glfw-3.4/include",
-          "${workspaceFolder}/../../libs/mingw64/include/c++/14.2.0/x86_64-w64-mingw32"
+          "${workspaceFolder}/../../libs/SDL_image/include",
+          "${workspaceFolder}/../../libs/mingw64/include"
         ],
         "defines": [],
         "compilerPath": "${workspaceFolder}/../../libs/mingw64/bin/g++.exe",
