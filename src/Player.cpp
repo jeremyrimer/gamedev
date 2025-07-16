@@ -27,9 +27,9 @@ Player::Player(SDL_Renderer* renderer) {
     position = { static_cast<float>(startX), static_cast<float>(startY), 32, 32 };
     speed = 200.0f;
     velocityX = 0.0f;
-    acceleration = 800.0f;   // pixels per second^2
+    acceleration = 1600.0f;   // pixels per second^2
     maxSpeed = 200.0f;       // top movement speed
-    drag = 1000.0f;          // how quickly to slow down when no input
+    drag = 1600.0f;          // how quickly to slow down when no input
 }
 
 void Player::handleInput(const bool* keyboardState) {
@@ -61,8 +61,14 @@ void Player::update(float deltaTime) {
     position.x += velocityX * deltaTime;
 
     // Clamp to screen
-    if (position.x < 0) position.x = 0;
-    if (position.x > SCREEN_WIDTH - position.w) position.x = SCREEN_WIDTH - position.w;
+    if (position.x < 0) {
+        position.x = 0;
+        velocityX = 0;
+    };
+    if (position.x > SCREEN_WIDTH - position.w) {
+        position.x = SCREEN_WIDTH - position.w;
+        velocityX = 0;
+    };
 }
 
 void Player::render(SDL_Renderer* renderer) {
