@@ -5,18 +5,15 @@
 #include <iostream>
 #include <unordered_map>
 
-
-// Player Object
 static Player* player;
 
-// Keyboard Button States
 static std::unordered_map<SDL_Keycode, bool> keyStates;
 
 void initPlayer(SDL_Renderer* renderer) {
     player = new Player(renderer);
 }
 
-void handleInput(const SDL_Event& event) {
+void handleGlobalInput(const SDL_Event& event, const bool* keyboardState) {
     if (event.type == SDL_EVENT_KEY_DOWN && event.key.repeat == 0) {
         if (event.key.key == SDLK_ESCAPE) {
             std::cout << "ESCAPE PRESSED; QUITTING..." << std::endl;
@@ -31,11 +28,13 @@ void handleInput(const SDL_Event& event) {
         std::cout << SDL_GetScancodeName(event.key.scancode) << " RELEASED" << std::endl;
         keyStates[event.key.key] = false;
     }
+    player->handleInput(keyboardState);
 }
 
-void update(const bool* keystates) {
-    player->handleInput(keystates);
-    player->update(60.0f);
+void update(float deltaTime) {
+    // Safety clamp to avoid giant simulation steps after pauses.
+    if (deltaTime > 0.1f) deltaTime = 0.1f;
+    player->update(deltaTime);
 }
 
 void render(SDL_Renderer* renderer) {

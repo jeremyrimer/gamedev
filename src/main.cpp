@@ -9,7 +9,7 @@ const int SCREEN_HEIGHT = 480;
 
 // Forward declarations
 bool init(SDL_Window*& window, SDL_Renderer*& renderer);
-void handleEvents(bool& running);
+void handleEvents(bool& running, const bool* keyboardState);
 void shutdown(SDL_Window* window, SDL_Renderer* renderer);
 
 int main(int argc, char* argv[]) {
@@ -22,13 +22,20 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    Uint64 prevCounter = SDL_GetPerformanceCounter();
+    double freq = (double)SDL_GetPerformanceFrequency();
     bool running = true;
     while (running) {
-        handleEvents(running);
-        const bool* keystates = SDL_GetKeyboardState(NULL);
-        update(keystates);           // from Engine.cpp
-        render(renderer);        // from Engine.cpp
-        SDL_Delay(16);           // ~60 FPS
+        const bool* keyboardState = SDL_GetKeyboardState(NULL);
+        handleEvents(running, keyboardState);
+
+        Uint64 now = SDL_GetPerformanceCounter();
+        float deltaTime = (float)((now - prevCounter) / freq);
+        prevCounter = now;
+        update(deltaTime);  // from Engine.cpp
+
+        render(renderer);   // from Engine.cpp
+        SDL_Delay(1);      // 16 = ~60 FPS, but with VSYNC, don't need it strict
     }
 
     shutdown(window, renderer);
@@ -73,13 +80,13 @@ bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
     return true;
 }
 
-void handleEvents(bool& running) {
+void handleEvents(bool& running, const bool* keyboardState) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_EVENT_QUIT) {
             running = false;
         } else {
-            handleInput(event);
+            handleGlobalInput(event, keyboardState);
         }
     }
 }

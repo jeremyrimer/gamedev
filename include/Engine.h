@@ -2,7 +2,7 @@
 #pragma once
 #include <SDL3/SDL.h>
 
-void update(const bool* keystates);
+void update(float deltaTime);
 void render(SDL_Renderer* renderer);
-void handleInput(const SDL_Event& event);
+void handleGlobalInput(const SDL_Event& event, const bool* keyboardState);
 void initPlayer(SDL_Renderer* renderer);

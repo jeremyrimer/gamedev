@@ -16,4 +16,12 @@ private:
     SDL_Texture* texture;
     SDL_FRect position;
     float speed;
+    
+    float velocityX;
+    float acceleration;
+    float maxSpeed;
+    float drag;
+
+    bool movingLeft;
+    bool movingRight;
 };
