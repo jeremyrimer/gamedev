@@ -13,29 +13,31 @@ void handleEvents(bool& running, const bool* keyboardState);
 void shutdown(SDL_Window* window, SDL_Renderer* renderer);
 
 int main(int argc, char* argv[]) {
-    std::cout << "Starting game...\n";
+    std::cout << "Starting game...\n" << std::endl;
 
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
 
     if (!init(window, renderer)) {
         return 1;
-    }
+    } 
 
     Uint64 prevCounter = SDL_GetPerformanceCounter();
     double freq = (double)SDL_GetPerformanceFrequency();
     bool running = true;
-    while (running) {
-        const bool* keyboardState = SDL_GetKeyboardState(NULL);
-        handleEvents(running, keyboardState);
 
+    while (running) {
+        // Server Tick
         Uint64 now = SDL_GetPerformanceCounter();
         float deltaTime = (float)((now - prevCounter) / freq);
-        prevCounter = now;
-        update(deltaTime);  // from Engine.cpp
 
+        const bool* keyboardState = SDL_GetKeyboardState(NULL);
+
+        handleEvents(running, keyboardState);
+        update(deltaTime);  // from Engine.cpp
         render(renderer);   // from Engine.cpp
         SDL_Delay(1);      // 16 = ~60 FPS, but with VSYNC, don't need it strict
+        prevCounter = now;
     }
 
     shutdown(window, renderer);

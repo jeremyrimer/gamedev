@@ -10,17 +10,19 @@ public:
     void render(SDL_Renderer* renderer);
     void handleInput(const bool* keystates);
     SDL_FRect getBounds() const;
-    int startX;
-    int startY;
+
 private:
     SDL_Texture* texture;
     SDL_FRect position;
-    
-    float velocityX;
-    float acceleration;
-    float maxSpeed;
-    float drag;
+    SDL_FPoint velocity;
+    float angle; 
+    float speed;
+    float rotationSpeed;
+    float thrust;
+    float friction;
 
-    bool movingLeft;
-    bool movingRight;
+    bool rotatingLeft;
+    bool rotatingRight;
+    bool thrusting;
+    bool braking;
 };
