@@ -6,10 +6,10 @@
 using std::cos;
 using std::sin;
 
-#define DEG2RAD(angleDegrees) ((angleDegrees) * M_PI / 180.0f)
+#define DEG2RAD(angleDegrees) ((angleDegrees-90) * M_PI / 180.0f)
 
 Player::Player(SDL_Renderer* renderer)
-    : velocity{0, 0}, angle(270), speed(0), rotationSpeed(180.0f), thrust(200.0f), friction(0.98f) {
+    : velocity{0, 0}, angle(0), speed(0), rotationSpeed(180.0f), thrust(200.0f), friction(0.98f) {
     SDL_Surface* surface = IMG_Load("assets/player-ship.png");
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_DestroySurface(surface);
@@ -43,11 +43,11 @@ void Player::update(float deltaTime) {
         velocity.y -= sin(radians) * thrust * deltaTime;
     }
 
-    // Apply velocity
+    // Apply velocity to position
     position.x += velocity.x * deltaTime;
     position.y += velocity.y * deltaTime;
 
-    // Apply friction
+    // Apply friction to position
     velocity.x *= friction;
     velocity.y *= friction;
 }
