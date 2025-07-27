@@ -30,6 +30,11 @@ IF %ERRORLEVEL% NEQ 0 (
 
 echo Build complete!
 cd ..
+
+echo Creating Distribution
+call dist.bat
+
+echo Running...
 call run.bat
 
 endlocal
