@@ -2,6 +2,7 @@
 #include <cmath>
 #include "Player.h"
 #include <SDL3_image/SDL_image.h>
+#include "Constants.h"
 
 using std::cos;
 using std::sin;
@@ -11,7 +12,12 @@ using std::sin;
 
 // player constructor
 Player::Player(SDL_Renderer* renderer)
-    : velocity{0, 0}, angle(0), speed(0), rotationSpeed(180.0f), thrust(200.0f), friction(0.996f) {
+    : velocity{0, 0}, 
+      angle(PLAYER_START_ANGLE), 
+      speed(PLAYER_STARTING_SPEED), 
+      rotationSpeed(PLAYER_STARTING_ROTATION_SPEED), 
+      thrust(PLAYER_STARTING_THRUST), 
+      friction(PLAYER_STARTING_FRICTION) {
     SDL_Surface* surface = IMG_Load("assets/player-ship.png");
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_DestroySurface(surface);
@@ -50,6 +56,19 @@ void Player::update(float deltaTime) {
     // Apply velocity to position
     position.x += velocity.x * deltaTime;
     position.y += velocity.y * deltaTime;
+
+    float centerX = position.x + position.w / 2;
+    float centerY = position.y + position.h / 2;
+
+    if (centerX < 0) 
+      position.x = (float)SCREEN_WIDTH;
+    else if (centerX > (float)SCREEN_WIDTH)
+      position.x = 0.0f;
+
+    if (centerY < 0) 
+      position.y = (float)SCREEN_HEIGHT;
+    else if (centerY > (float)SCREEN_HEIGHT)
+      position.y = 0.0f;
 
     // Apply friction to position
     velocity.x *= friction;

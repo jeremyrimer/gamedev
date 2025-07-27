@@ -17,12 +17,13 @@ private:
     SDL_FPoint velocity; // how fast the player is moving represented by the x/y values of a point
     
     float angle; // angle the right side of the player is facing
-    float speed;
-    float rotationSpeed;
-    float thrust;
-    float friction;
+    float speed; // forward speed
+    float rotationSpeed; // rotational speed
+    float thrust; // how much thrusting affects forward speed
+    float friction; // how much drag on the sprite
 
-    bool rotatingLeft;
+    // Input States
+    bool rotatingLeft; 
     bool rotatingRight;
     bool thrusting;
     bool braking;

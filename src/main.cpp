@@ -1,11 +1,10 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include <iostream>
 #include "Engine.h"
-
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+#include "Constants.h"
 
 // Forward declarations
 bool init(SDL_Window*& window, SDL_Renderer*& renderer);
@@ -56,6 +55,11 @@ bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "SDL3 Init failed: " << SDL_GetError() << "\n";
+        return false;
+    }
+
+    if (TTF_Init() < 0) {
+        std::cerr << "TTF Init failed: " << SDL_GetError() << std::endl;
         return false;
     }
 

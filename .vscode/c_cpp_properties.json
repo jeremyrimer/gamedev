@@ -7,6 +7,7 @@
           "${workspaceFolder}/src",
           "${workspaceFolder}/../../libs/SDL3-3.2.16/x86_64-w64-mingw32/include",
           "${workspaceFolder}/../../libs/SDL_image/include",
+          "${workspaceFolder}/../../libs/SDL_ttf/include",
           "${workspaceFolder}/../../libs/mingw64/include"
         ],
         "defines": [],
