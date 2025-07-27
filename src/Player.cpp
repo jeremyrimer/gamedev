@@ -14,11 +14,11 @@ using std::sin;
 // player constructor
 Player::Player(SDL_Renderer* renderer)
     : velocity{0, 0}, 
-      angle(PLAYER_START_ANGLE), 
+      angle(PLAYER_STARTING_ANGLE), 
       speed(PLAYER_STARTING_SPEED), 
       rotationSpeed(PLAYER_STARTING_ROTATION_SPEED), 
-      thrust(PLAYER_STARTING_THRUST), 
-      friction(PLAYER_STARTING_FRICTION) {
+      thrust(PLAYER_THRUST), 
+      friction(PLAYER_FRICTION) {
     SDL_Surface* surface = IMG_Load("assets/player-ship.png");
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_DestroySurface(surface);
@@ -93,4 +93,12 @@ void Player::render(SDL_Renderer* renderer) {
 // get a player's position
 SDL_FRect Player::getBounds() const {
     return position;
+}
+
+float Player::getAngle() const {
+    return angle;
+}
+
+SDL_FPoint Player::getVelocity() const {
+    return velocity;
 }

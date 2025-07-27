@@ -10,6 +10,8 @@ public:
     void render(SDL_Renderer* renderer); // display a player on the screen
     void handleInput(const bool* keystates); // apply player states based on input
     SDL_FRect getBounds() const; // unsure but seems to get a player's position
+    float getAngle() const; 
+    SDL_FPoint getVelocity() const;
 
 private:
     SDL_Texture* texture; // texture to render for the player

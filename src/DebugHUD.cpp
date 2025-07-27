@@ -8,7 +8,7 @@
 
 DebugHUD::DebugHUD(SDL_Renderer* renderer) {
   // CONSTRUCTOR...
-  font = TTF_OpenFont("assets/cour.ttf", 12); // number is font size
+  font = TTF_OpenFont("assets/fonts/jb.ttf", 12); // number is font size
   if (!font) {
       SDL_Log("Failed to load font: %s", SDL_GetError());
       // handle error, maybe disable debug HUD rendering
@@ -29,21 +29,29 @@ void DebugHUD::handleInput(const bool* keystates) {
 void DebugHUD::update(float deltaTime, const Player& player) {
     if (visible) {
         playerBounds = player.getBounds();
+        playerAngle = player.getAngle();
+        playerVelocity = player.getVelocity();
     }
 }
 
 void DebugHUD::render(SDL_Renderer* renderer) {
     if (!visible) return;
 
-    std::string playerXText = "Player X: " + std::to_string(playerBounds.x); 
-    std::string playerYText = "Player Y: " + std::to_string(playerBounds.y); 
-    std::string playerHText = "Player H: " + std::to_string(playerBounds.h); 
-    std::string playerWText = "Player W: " + std::to_string(playerBounds.w);
+    std::string playerXText = "Position X: " + std::to_string(playerBounds.x); 
+    std::string playerYText = "Position Y: " + std::to_string(playerBounds.y); 
+    std::string playerHText = "Height: " + std::to_string(playerBounds.h); 
+    std::string playerWText = "Width: " + std::to_string(playerBounds.w);
+    std::string playerAngleText = "Angle: " + std::to_string(playerAngle);
+    std::string playerXVelocity = "Velocity X: " + std::to_string(playerVelocity.x); 
+    std::string playerYVelocity = "Velocity Y: " + std::to_string(playerVelocity.y);
 
     renderText(renderer, playerXText, 10, SCREEN_HEIGHT - 20);
-    renderText(renderer, playerYText, 10, SCREEN_HEIGHT - 30);
-    renderText(renderer, playerHText, 10, SCREEN_HEIGHT - 40);
-    renderText(renderer, playerWText, 10, SCREEN_HEIGHT - 50);
+    renderText(renderer, playerYText, 10, SCREEN_HEIGHT - 35);
+    renderText(renderer, playerHText, 10, SCREEN_HEIGHT - 50);
+    renderText(renderer, playerWText, 10, SCREEN_HEIGHT - 65);
+    renderText(renderer, playerAngleText, 10, SCREEN_HEIGHT - 80);
+    renderText(renderer, playerXVelocity, 10, SCREEN_HEIGHT - 95);
+    renderText(renderer, playerYVelocity, 10, SCREEN_HEIGHT - 110);
 }
 
 void DebugHUD::renderText(SDL_Renderer* renderer, const std::string &text, int x, int y) {

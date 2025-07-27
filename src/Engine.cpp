@@ -26,11 +26,11 @@ void handleGlobalInput(const SDL_Event& event, const bool* keyboardState) {
             SDL_PushEvent(&quitEvent);
             // TODO NONE OF THIS WORKS!, in fact it's intercepted in main handleEvents
         } else {
-            std::cout << SDL_GetScancodeName(event.key.scancode) << " PRESSED" << std::endl;
+            // std::cout << SDL_GetScancodeName(event.key.scancode) << " PRESSED" << std::endl;
             keyStates[event.key.key] = true;
         }
     } else if (event.type == SDL_EVENT_KEY_UP && event.key.repeat == 0) {
-        std::cout << SDL_GetScancodeName(event.key.scancode) << " RELEASED" << std::endl;
+        // std::cout << SDL_GetScancodeName(event.key.scancode) << " RELEASED" << std::endl;
         keyStates[event.key.key] = false;
     }
     player->handleInput(keyboardState);
