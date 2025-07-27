@@ -82,17 +82,18 @@ bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
     SDL_SetRenderVSync(renderer, true);
     SDL_SetRenderLogicalPresentation(renderer, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
-    initPlayer(renderer);
+    init(renderer); // from Engine.cpp
     return true;
 }
 
 void handleEvents(bool& running, const bool* keyboardState) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
+        std:
         if (event.type == SDL_EVENT_QUIT) {
             running = false;
         } else {
-            handleGlobalInput(event, keyboardState);
+            handleGlobalInput(event, keyboardState); // from Engine.cpp
         }
     }
 }

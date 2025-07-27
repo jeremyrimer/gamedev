@@ -5,4 +5,4 @@
 void update(float deltaTime);
 void render(SDL_Renderer* renderer);
 void handleGlobalInput(const SDL_Event& event, const bool* keyboardState);
-void initPlayer(SDL_Renderer* renderer);
+void init(SDL_Renderer* renderer);

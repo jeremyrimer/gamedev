@@ -22,7 +22,7 @@ if not exist "%SDL_DLL%" (
 echo Running PixelEngine...
 echo ==========================
 echo.
-"%EXE_PATH%"
+"%EXE_PATH%" 2>&1
 echo.
 echo ==========================
 echo Game exited.

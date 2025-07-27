@@ -3,6 +3,7 @@
 #include "Player.h"
 #include <SDL3_image/SDL_image.h>
 #include "Constants.h"
+#include <iostream>
 
 using std::cos;
 using std::sin;
@@ -22,7 +23,7 @@ Player::Player(SDL_Renderer* renderer)
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_DestroySurface(surface);
 
-    position = {400, 300, 64, 64};
+    position = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 32, 32};
 }
 
 // handle input for a player
@@ -60,15 +61,22 @@ void Player::update(float deltaTime) {
     float centerX = position.x + position.w / 2;
     float centerY = position.y + position.h / 2;
 
-    if (centerX < 0) 
+    if (centerX < -position.w / 2) {
+      std::cout << "SETTING PLAYER TO RIGHT SIDE OF SCREEN" << std::endl;
       position.x = (float)SCREEN_WIDTH;
-    else if (centerX > (float)SCREEN_WIDTH)
-      position.x = 0.0f;
-
-    if (centerY < 0) 
+    }
+    else if (centerX > (float)SCREEN_WIDTH + position.w / 2) {
+      std::cout << "SETTING PLAYER TO LEWFT SIDE OF SCREEN" << std::endl;
+      position.x = -position.w;
+    }
+    if (centerY < -position.h / 2) {
+      std::cout << "SETTING PLAYER TO BOTTOM OF SCREEN" << std::endl;
       position.y = (float)SCREEN_HEIGHT;
-    else if (centerY > (float)SCREEN_HEIGHT)
-      position.y = 0.0f;
+    }
+    else if (centerY > (float)SCREEN_HEIGHT + position.h / 2) {
+      std::cout << "SETTING PLAYER TO TOP OF SCREEN" << std::endl;
+      position.y = -position.h;
+    }
 
     // Apply friction to position
     velocity.x *= friction;
