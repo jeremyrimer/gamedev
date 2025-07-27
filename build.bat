@@ -1,6 +1,8 @@
 @echo off
 setlocal
 
+set arg=%1
+
 REM === CONFIGURE YOUR INSTALL LOCATION HERE ===
 set INSTALL_DIR=C:\programming\libs\install
 
@@ -31,10 +33,9 @@ IF %ERRORLEVEL% NEQ 0 (
 echo Build complete!
 cd ..
 
-echo Creating Distribution
-call dist.bat
-
-echo Running...
-call run.bat
+if /I "%arg%"=="run" (
+    echo Running...
+    call run.bat
+)
 
 endlocal

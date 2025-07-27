@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 
 bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
     // WINDOW setup
-    SDL_Surface* iconSurface = IMG_Load("assets/human_aimbot_profile_pic.png");  
+    SDL_Surface* iconSurface = IMG_Load("assets/human_aimbot_profile_pic.ico");  
     if (!iconSurface) {
         SDL_Log("IMG_LoadSurface failed: %s", SDL_GetError());
         std::cerr << "[SDL3_IMAGE] Icon Initialization failed\n";

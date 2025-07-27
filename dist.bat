@@ -1,6 +1,13 @@
 @echo off
 setlocal enabledelayedexpansion
 
+set arg=%1
+
+if /I "%arg%"=="build" (
+    echo Building First...
+    call build.bat
+)
+
 :: === CONFIG ===
 set PROJECT_NAME=PixelEngine
 set BUILD_DIR=build
@@ -26,3 +33,7 @@ copy "%BUILD_DIR%\*.dll" %DIST_DIR%
 :: === COPY ASSETS ===
 echo Copying Assets...
 xcopy /E /I /Y %ASSET_DIR% %DIST_DIR%\assets\
+
+:: === MAKE Installer ===
+echo Creating Installer...
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" inno.iss 
