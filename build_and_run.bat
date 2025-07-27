@@ -28,12 +28,6 @@ IF %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
-REM === Copy DLLs to output folder ===
-echo Copying DLLs...
-copy "%INSTALL_DIR%\bin\SDL3.dll" .
-copy "%INSTALL_DIR%\bin\SDL3_image.dll" .
-copy "%INSTALL_DIR%\bin\SDL3_ttf.dll" .
-
 echo Build complete!
 cd ..
 call run.bat
