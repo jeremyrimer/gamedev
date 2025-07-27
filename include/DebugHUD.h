@@ -12,9 +12,11 @@ public:
 
 private:
     void renderText(SDL_Renderer* renderer, const std::string &text, int x, int y);
+    bool lastF3State = false;
     bool visible = false;
     // SDL_ttf stuff: font, textures, etc.
     // Data to display: FPS, coords, etc.
     SDL_FRect playerBounds;
     TTF_Font* font;  // ← this line was missing!
+
 };

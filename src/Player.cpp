@@ -62,19 +62,19 @@ void Player::update(float deltaTime) {
     float centerY = position.y + position.h / 2;
 
     if (centerX < -position.w / 2) {
-      std::cout << "SETTING PLAYER TO RIGHT SIDE OF SCREEN" << std::endl;
+      // std::cout << "SETTING PLAYER TO RIGHT SIDE OF SCREEN" << std::endl;
       position.x = (float)SCREEN_WIDTH;
     }
     else if (centerX > (float)SCREEN_WIDTH + position.w / 2) {
-      std::cout << "SETTING PLAYER TO LEWFT SIDE OF SCREEN" << std::endl;
+      // std::cout << "SETTING PLAYER TO LEWFT SIDE OF SCREEN" << std::endl;
       position.x = -position.w;
     }
     if (centerY < -position.h / 2) {
-      std::cout << "SETTING PLAYER TO BOTTOM OF SCREEN" << std::endl;
+      // std::cout << "SETTING PLAYER TO BOTTOM OF SCREEN" << std::endl;
       position.y = (float)SCREEN_HEIGHT;
     }
     else if (centerY > (float)SCREEN_HEIGHT + position.h / 2) {
-      std::cout << "SETTING PLAYER TO TOP OF SCREEN" << std::endl;
+      // std::cout << "SETTING PLAYER TO TOP OF SCREEN" << std::endl;
       position.y = -position.h;
     }
 

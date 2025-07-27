@@ -16,7 +16,14 @@ DebugHUD::DebugHUD(SDL_Renderer* renderer) {
 }
 
 void DebugHUD::handleInput(const bool* keystates) {
-    visible = keystates[SDL_SCANCODE_F3];
+    bool currentF3State = keystates[SDL_SCANCODE_F3];
+
+    // Toggle on key down (not held)
+    if (currentF3State && !lastF3State) {
+        visible = !visible;
+    }
+
+    lastF3State = currentF3State;
 }
 
 void DebugHUD::update(float deltaTime, const Player& player) {
@@ -28,7 +35,6 @@ void DebugHUD::update(float deltaTime, const Player& player) {
 void DebugHUD::render(SDL_Renderer* renderer) {
     if (!visible) return;
 
-    // Example strings
     std::string playerXText = "Player X: " + std::to_string(playerBounds.x); 
     std::string playerYText = "Player Y: " + std::to_string(playerBounds.y); 
     std::string playerHText = "Player H: " + std::to_string(playerBounds.h); 
@@ -38,7 +44,6 @@ void DebugHUD::render(SDL_Renderer* renderer) {
     renderText(renderer, playerYText, 10, SCREEN_HEIGHT - 30);
     renderText(renderer, playerHText, 10, SCREEN_HEIGHT - 40);
     renderText(renderer, playerWText, 10, SCREEN_HEIGHT - 50);
-    
 }
 
 void DebugHUD::renderText(SDL_Renderer* renderer, const std::string &text, int x, int y) {
