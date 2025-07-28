@@ -88,6 +88,33 @@ void Player::render(SDL_Renderer* renderer) {
     SDL_FRect dest = position;
     SDL_FPoint center = {dest.w / 2, dest.h / 2};
     SDL_RenderTextureRotated(renderer, texture, nullptr, &dest, angle, &center, SDL_FLIP_NONE);
+
+    if (thrusting && rand() % 100 < 90) { // 90% chance to show flame this frame
+        float flameLength = 18.0f + (rand() % 6);   // Length between 8–13 px
+        float flameSpread = 1.0f + (rand() % 3);   // Spread between 5–7 px
+
+        float rad = DEG2RAD(angle);
+        float centerX = position.x + position.w / 2;
+        float centerY = position.y + position.h / 2;
+
+        float rearX = centerX - cos(rad) * (position.w / 2);
+        float rearY = centerY - sin(rad) * (position.h / 2);
+
+        // Slight randomization in color to simulate flicker
+        int r = 240 + rand() % 16; // 240–255
+        int g = 80 + rand() % 30;  // 80–110
+        int b = 0;
+
+        SDL_Vertex verts[3];
+        verts[0].position = { rearX - cos(rad) * flameLength, rearY - sin(rad) * flameLength };
+        verts[1].position = { rearX + sin(rad) * flameSpread, rearY - cos(rad) * flameSpread };
+        verts[2].position = { rearX - sin(rad) * flameSpread, rearY + cos(rad) * flameSpread };
+
+        for (int i = 0; i < 3; ++i)
+            verts[i].color = { (float)r, (float)g, (float)b, 255 };
+
+        SDL_RenderGeometry(renderer, nullptr, verts, 3, nullptr, 0);
+    }
 }
 
 // get a player's position
