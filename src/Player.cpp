@@ -11,7 +11,6 @@ using std::sin;
 // convert degrees to radians, shifting the calc 90 degrees to the left
 #define DEG2RAD(angleDegrees) ( (angleDegrees-90) * M_PI / 180.0f )
 
-// player constructor
 Player::Player(SDL_Renderer* renderer)
     : velocity{0, 0}, 
       angle(PLAYER_STARTING_ANGLE), 
@@ -88,11 +87,11 @@ void Player::render(SDL_Renderer* renderer) {
     SDL_FRect dest = position;
     SDL_FPoint center = {dest.w / 2, dest.h / 2};
     SDL_RenderTextureRotated(renderer, texture, nullptr, &dest, angle, &center, SDL_FLIP_NONE);
+
     if (thrusting) renderThruster(renderer);    
 }
 
-// get a player's position
-SDL_FRect Player::getBounds() const {
+SDL_FRect Player::getPosition() const {
     return position;
 }
 

@@ -28,7 +28,7 @@ void DebugHUD::handleInput(const bool* keystates) {
 
 void DebugHUD::update(float deltaTime, const Player& player) {
     if (visible) {
-        playerBounds = player.getBounds();
+        playerBounds = player.getPosition();
         playerAngle = player.getAngle();
         playerVelocity = player.getVelocity();
     }
