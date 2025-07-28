@@ -62,17 +62,17 @@ void Player::update(float deltaTime) {
 
     if (centerX < -position.w / 2) {
       // std::cout << "SETTING PLAYER TO RIGHT SIDE OF SCREEN" << std::endl;
-      position.x = (float)SCREEN_WIDTH;
+      position.x = static_cast<float>(SCREEN_WIDTH);
     }
-    else if (centerX > (float)SCREEN_WIDTH + position.w / 2) {
+    else if (centerX > static_cast<float>(SCREEN_WIDTH) + position.w / 2) {
       // std::cout << "SETTING PLAYER TO LEWFT SIDE OF SCREEN" << std::endl;
       position.x = -position.w;
     }
     if (centerY < -position.h / 2) {
       // std::cout << "SETTING PLAYER TO BOTTOM OF SCREEN" << std::endl;
-      position.y = (float)SCREEN_HEIGHT;
+      position.y = static_cast<float>(SCREEN_HEIGHT);
     }
-    else if (centerY > (float)SCREEN_HEIGHT + position.h / 2) {
+    else if (centerY > static_cast<float>(SCREEN_HEIGHT) + position.h / 2) {
       // std::cout << "SETTING PLAYER TO TOP OF SCREEN" << std::endl;
       position.y = -position.h;
     }
@@ -106,7 +106,7 @@ SDL_FPoint Player::getVelocity() const {
 void Player::renderThruster(SDL_Renderer* renderer) {
     if (rand() % 100 < 90) { // 90% chance to show flame this frame
         float flameLength = 18.0f + (rand() % 6);   // Length between 8–13 px
-        float flameSpread = 1.0f + (rand() % 3);   // Spread between 5–7 px
+        float flameSpread = 0.5f + (rand() % 3);   // Spread between 5–7 px
 
         float rad = DEG2RAD(angle);
         float centerX = position.x + position.w / 2;
@@ -126,7 +126,7 @@ void Player::renderThruster(SDL_Renderer* renderer) {
         verts[2].position = { rearX - sin(rad) * flameSpread, rearY + cos(rad) * flameSpread };
 
         for (int i = 0; i < 3; ++i)
-            verts[i].color = { (float)r, (float)g, (float)b, 255 };
+            verts[i].color = { static_cast<float>(r), static_cast<float>(g), static_cast<float>(b), 255 };
 
         SDL_RenderGeometry(renderer, nullptr, verts, 3, nullptr, 0);
     }

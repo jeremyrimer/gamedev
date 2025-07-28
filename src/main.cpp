@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     while (running) {
         // Server Tick
         Uint64 now = SDL_GetPerformanceCounter();
-        float deltaTime = (float)((now - prevCounter) / freq);
+        float deltaTime = static_cast<float>((now - prevCounter) / freq);
 
         const bool* keyboardState = SDL_GetKeyboardState(NULL);
 

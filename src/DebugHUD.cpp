@@ -71,7 +71,7 @@ void DebugHUD::renderText(SDL_Renderer* renderer, const std::string &text, int x
     }
     SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
 
-    SDL_FRect dst = { (float)x, (float)y, (float)surface->w, (float)surface->h };
+    SDL_FRect dst = { static_cast<float>(x), static_cast<float>(y), static_cast<float>(surface->w), static_cast<float>(surface->h) };
     SDL_RenderTexture(renderer, texture, nullptr, &dst);
 
     SDL_DestroyTexture(texture);
