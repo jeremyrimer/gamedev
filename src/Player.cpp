@@ -88,8 +88,24 @@ void Player::render(SDL_Renderer* renderer) {
     SDL_FRect dest = position;
     SDL_FPoint center = {dest.w / 2, dest.h / 2};
     SDL_RenderTextureRotated(renderer, texture, nullptr, &dest, angle, &center, SDL_FLIP_NONE);
+    if (thrusting) renderThruster(renderer);    
+}
 
-    if (thrusting && rand() % 100 < 90) { // 90% chance to show flame this frame
+// get a player's position
+SDL_FRect Player::getBounds() const {
+    return position;
+}
+
+float Player::getAngle() const {
+    return angle;
+}
+
+SDL_FPoint Player::getVelocity() const {
+    return velocity;
+}
+
+void Player::renderThruster(SDL_Renderer* renderer) {
+    if (rand() % 100 < 90) { // 90% chance to show flame this frame
         float flameLength = 18.0f + (rand() % 6);   // Length between 8–13 px
         float flameSpread = 1.0f + (rand() % 3);   // Spread between 5–7 px
 
@@ -115,17 +131,4 @@ void Player::render(SDL_Renderer* renderer) {
 
         SDL_RenderGeometry(renderer, nullptr, verts, 3, nullptr, 0);
     }
-}
-
-// get a player's position
-SDL_FRect Player::getBounds() const {
-    return position;
-}
-
-float Player::getAngle() const {
-    return angle;
-}
-
-SDL_FPoint Player::getVelocity() const {
-    return velocity;
 }

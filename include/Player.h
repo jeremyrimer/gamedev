@@ -14,6 +14,8 @@ public:
     SDL_FPoint getVelocity() const;
 
 private:
+    void renderThruster(SDL_Renderer* renderer);
+
     SDL_Texture* texture; // texture to render for the player
     SDL_FRect position; // where to render the texture on screen
     SDL_FPoint velocity; // how fast the player is moving represented by the x/y values of a point
