@@ -22,6 +22,31 @@ Player::Player(SDL_Renderer* renderer)
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_DestroySurface(surface);
 
+    SDL_AudioSpec spec;
+    if (!SDL_LoadWAV("assets/sound/thrusters.wav", &spec, &thrusterBuffer, &thrusterLength)) {
+        SDL_Log("Failed to load thruster sound: %s", SDL_GetError());
+    } else {
+        SDL_AudioSpec desiredSpec = {};
+        desiredSpec.format = spec.format;
+        desiredSpec.channels = spec.channels;
+        desiredSpec.freq = spec.freq;
+        thrusterDevice = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &desiredSpec);
+        if (thrusterDevice == 0) {
+            SDL_Log("Failed to open audio device: %s", SDL_GetError());
+        } else {
+            thrusterStream = SDL_CreateAudioStream(&spec, &desiredSpec);
+            SDL_BindAudioStream(thrusterDevice, thrusterStream);
+            if (SDL_PutAudioStreamData(thrusterStream, thrusterBuffer, thrusterLength) < 0) {
+                SDL_Log("Failed to put audio data into stream: %s", SDL_GetError());
+            } else {
+                SDL_PauseAudioDevice(thrusterDevice);
+            }
+        }
+        // std::cout << "Opening audio device with freq=" << desiredSpec.freq
+        //     << ", format=" << desiredSpec.format
+        //     << ", channels=" << (int)desiredSpec.channels << std::endl;
+                
+    }
     position = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 32, 32};
 }
 
@@ -80,6 +105,28 @@ void Player::update(float deltaTime) {
     // Apply friction to position
     velocity.x *= friction;
     velocity.y *= friction;
+
+    // SOUND
+    if (thrusting) {
+        if (!thrusterAudioData.playing) {
+            thrusterAudioData.playing = true;
+            // std::cout << "THRUST AUDIO RESUMING" << std::endl;
+            SDL_ResumeAudioDevice(thrusterDevice);
+        }
+
+        // Refill audio stream if needed
+        if (SDL_GetAudioStreamAvailable(thrusterStream) < (int)thrusterLength) {
+            if (SDL_PutAudioStreamData(thrusterStream, thrusterBuffer, thrusterLength) < 0) {
+                SDL_Log("Failed to queue audio: %s", SDL_GetError());
+            }
+        }
+    } else {
+        if (thrusterAudioData.playing) {
+            thrusterAudioData.playing = false;
+            // std::cout << "THRUST AUDIO PAUSING" << std::endl;
+            SDL_PauseAudioDevice(thrusterDevice);
+        }
+    }
 }
 
 // render a player on screen
@@ -105,8 +152,8 @@ SDL_FPoint Player::getVelocity() const {
 
 void Player::renderThruster(SDL_Renderer* renderer) {
     if (rand() % 100 < 90) { // 90% chance to show flame this frame
-        float flameLength = 18.0f + (rand() % 6);   // Length between 8–13 px
-        float flameSpread = 0.5f + (rand() % 3);   // Spread between 5–7 px
+        float flameLength = 18.0f + (rand() % 6);
+        float flameSpread = 0.5f + (rand() % 3);
 
         float rad = DEG2RAD(angle);
         float centerX = position.x + position.w / 2;
