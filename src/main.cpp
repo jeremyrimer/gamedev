@@ -7,19 +7,16 @@
 #include "Constants.h"
 
 // Forward declarations
-bool init(SDL_Window*& window, SDL_Renderer*& renderer);
-void handleEvents(bool& running, const bool* keyboardState);
-void shutdown(SDL_Window* window, SDL_Renderer* renderer);
+bool init(SDL_Window*& window, SDL_Renderer*& renderer); // method that starts up all subsystems
+void handleEvents(bool& running, const bool* keyboardState); // SDL events are fired throughout operation, this routes them
+void shutdown(SDL_Window* window, SDL_Renderer* renderer); // game over handler
 
+// First code executed
 int main(int argc, char* argv[]) {
-    std::cout << "Starting game...\n" << std::endl;
-
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
 
-    if (!init(window, renderer)) {
-        return 1;
-    } 
+    if (!init(window, renderer)) return 1; 
 
     Uint64 prevCounter = SDL_GetPerformanceCounter();
     double freq = (double)SDL_GetPerformanceFrequency();
@@ -35,7 +32,7 @@ int main(int argc, char* argv[]) {
         handleEvents(running, keyboardState);
         update(deltaTime);  // from Engine.cpp
         render(renderer);   // from Engine.cpp
-        SDL_Delay(1);      // 16 = ~60 FPS, but with VSYNC, don't need it strict
+        SDL_Delay(1);      // This just stops the app from pinning 100% CPU usage
         prevCounter = now;
     }
 
@@ -51,7 +48,7 @@ bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
         std::cerr << "[SDL3_IMAGE] Icon Initialization failed\n";
         SDL_DestroySurface(iconSurface);
         return false;
-    }
+    } 
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         std::cerr << "SDL3 Init failed: " << SDL_GetError() << "\n";
@@ -64,7 +61,7 @@ bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
     }
 
     window = SDL_CreateWindow("Human Aimbot", SCREEN_WIDTH, SCREEN_HEIGHT, 
-      SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED
+      SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_OPENGL
     );
     if (!window) {
         std::cerr << "Failed to create window: " << SDL_GetError() << "\n";
