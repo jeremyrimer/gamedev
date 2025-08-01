@@ -81,6 +81,7 @@ void Audio::play() {
 
 void Audio::stop() {
     if (!playing) return;
+    SDL_PauseAudioDevice(device);
     if (stream) {
         SDL_ClearAudioStream(stream);
     }
