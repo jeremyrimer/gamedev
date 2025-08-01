@@ -4,6 +4,7 @@
 #include <SDL3_image/SDL_image.h>
 #include "Constants.h"
 #include <iostream>
+#include "Audio.h"
 
 using std::cos;
 using std::sin;
@@ -17,36 +18,12 @@ Player::Player(SDL_Renderer* renderer)
       speed(PLAYER_STARTING_SPEED), 
       rotationSpeed(PLAYER_STARTING_ROTATION_SPEED), 
       thrust(PLAYER_THRUST), 
-      friction(PLAYER_FRICTION) {
+      friction(PLAYER_FRICTION),
+      thrusterSound("assets/sound/thrusters.wav") {
     SDL_Surface* surface = IMG_Load("assets/player-ship.png");
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_DestroySurface(surface);
 
-    SDL_AudioSpec spec;
-    if (!SDL_LoadWAV("assets/sound/thrusters.wav", &spec, &thrusterBuffer, &thrusterLength)) {
-        SDL_Log("Failed to load thruster sound: %s", SDL_GetError());
-    } else {
-        SDL_AudioSpec desiredSpec = {};
-        desiredSpec.format = spec.format;
-        desiredSpec.channels = spec.channels;
-        desiredSpec.freq = spec.freq;
-        thrusterDevice = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &desiredSpec);
-        if (thrusterDevice == 0) {
-            SDL_Log("Failed to open audio device: %s", SDL_GetError());
-        } else {
-            thrusterStream = SDL_CreateAudioStream(&spec, &desiredSpec);
-            SDL_BindAudioStream(thrusterDevice, thrusterStream);
-            if (SDL_PutAudioStreamData(thrusterStream, thrusterBuffer, thrusterLength) < 0) {
-                SDL_Log("Failed to put audio data into stream: %s", SDL_GetError());
-            } else {
-                SDL_PauseAudioDevice(thrusterDevice);
-            }
-        }
-        // std::cout << "Opening audio device with freq=" << desiredSpec.freq
-        //     << ", format=" << desiredSpec.format
-        //     << ", channels=" << (int)desiredSpec.channels << std::endl;
-                
-    }
     position = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 32, 32};
 }
 
@@ -112,24 +89,10 @@ void Player::update(float deltaTime) {
 
     // SOUND
     if (thrusting) {
-        if (!thrusterAudioData.playing) {
-            thrusterAudioData.playing = true;
-            // std::cout << "THRUST AUDIO RESUMING" << std::endl;
-            SDL_ResumeAudioDevice(thrusterDevice);
-        }
-
-        // Refill audio stream if needed
-        if (SDL_GetAudioStreamAvailable(thrusterStream) < (int)thrusterLength) {
-            if (SDL_PutAudioStreamData(thrusterStream, thrusterBuffer, thrusterLength) < 0) {
-                SDL_Log("Failed to queue audio: %s", SDL_GetError());
-            }
-        }
+        thrusterSound.play();
+        thrusterSound.updateForLooping();
     } else {
-        if (thrusterAudioData.playing) {
-            thrusterAudioData.playing = false;
-            // std::cout << "THRUST AUDIO PAUSING" << std::endl;
-            SDL_PauseAudioDevice(thrusterDevice);
-        }
+        thrusterSound.stop();
     }
 }
 

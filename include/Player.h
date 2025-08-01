@@ -2,7 +2,7 @@
 #pragma once
 #include <SDL3/SDL.h>
 #include <unordered_map>
-#include "AudioData.h"
+#include "Audio.h"
 
 class Player {
 public:
@@ -33,10 +33,5 @@ private:
     bool thrusting;
     bool braking;
 
-    // Audio stuff
-    AudioData thrusterAudioData;
-    SDL_AudioDeviceID thrusterDevice = 0; // Audio Device ID
-    SDL_AudioStream* thrusterStream; // pointer to actual stream
-    Uint8* thrusterBuffer = nullptr; // holds the wav audio data feeding to sound sys
-    Uint32 thrusterLength = 0; // how long the audio clip is
+    Audio thrusterSound;
 };
