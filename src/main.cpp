@@ -13,6 +13,8 @@ void shutdown(SDL_Window* window, SDL_Renderer* renderer); // game over handler
 
 // First code executed
 int main(int argc, char* argv[]) {
+    std::cout << "Human Aimbot Startup" << std::endl;
+    srand(static_cast<unsigned int>(time(nullptr))); // Seed RNG once!
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
 
@@ -37,6 +39,7 @@ int main(int argc, char* argv[]) {
     }
 
     shutdown(window, renderer);
+    std::cout << "Human Aimbot Shutdown" << std::endl;
     return 0;
 }
 

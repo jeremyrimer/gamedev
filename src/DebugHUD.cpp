@@ -6,7 +6,7 @@
 #include <iostream>
 #include <Constants.h>
 
-DebugHUD::DebugHUD(SDL_Renderer* renderer) {
+DebugHUD::DebugHUD(SDL_Renderer* renderer) : renderer(renderer) {
   // CONSTRUCTOR...
   font = TTF_OpenFont("assets/fonts/jb.ttf", 12); // number is font size
   if (!font) {
@@ -34,7 +34,7 @@ void DebugHUD::update(float deltaTime, const Player& player) {
     }
 }
 
-void DebugHUD::render(SDL_Renderer* renderer) {
+void DebugHUD::render() {
     if (!visible) return;
 
     std::string playerXText = "Position X: " + std::to_string(playerBounds.x); 
@@ -45,16 +45,16 @@ void DebugHUD::render(SDL_Renderer* renderer) {
     std::string playerXVelocity = "Velocity X: " + std::to_string(playerVelocity.x); 
     std::string playerYVelocity = "Velocity Y: " + std::to_string(playerVelocity.y);
 
-    renderText(renderer, playerXText, 10, SCREEN_HEIGHT - 20);
-    renderText(renderer, playerYText, 10, SCREEN_HEIGHT - 35);
-    renderText(renderer, playerHText, 10, SCREEN_HEIGHT - 50);
-    renderText(renderer, playerWText, 10, SCREEN_HEIGHT - 65);
-    renderText(renderer, playerAngleText, 10, SCREEN_HEIGHT - 80);
-    renderText(renderer, playerXVelocity, 10, SCREEN_HEIGHT - 95);
-    renderText(renderer, playerYVelocity, 10, SCREEN_HEIGHT - 110);
+    renderText(playerXText, 10, SCREEN_HEIGHT - 20);
+    renderText(playerYText, 10, SCREEN_HEIGHT - 35);
+    renderText(playerHText, 10, SCREEN_HEIGHT - 50);
+    renderText(playerWText, 10, SCREEN_HEIGHT - 65);
+    renderText(playerAngleText, 10, SCREEN_HEIGHT - 80);
+    renderText(playerXVelocity, 10, SCREEN_HEIGHT - 95);
+    renderText(playerYVelocity, 10, SCREEN_HEIGHT - 110);
 }
 
-void DebugHUD::renderText(SDL_Renderer* renderer, const std::string &text, int x, int y) {
+void DebugHUD::renderText(const std::string &text, int x, int y) {
     SDL_Color color = {255, 255, 255, 255};
 
     SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), text.size(), color);

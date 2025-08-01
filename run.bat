@@ -21,9 +21,7 @@ if not exist "%SDL_DLL%" (
 
 echo Running HumanAimbot...
 echo ==========================
-echo.
 "%EXE_PATH%" 2>&1
-echo.
 echo ==========================
 echo Game exited.
 @REM pause

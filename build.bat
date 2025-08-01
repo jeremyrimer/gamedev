@@ -34,7 +34,6 @@ echo Build complete!
 cd ..
 
 if /I "%arg%"=="run" (
-    echo Running...
     call run.bat
 )
 

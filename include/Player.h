@@ -8,14 +8,15 @@ class Player {
 public:
     Player(SDL_Renderer* renderer); // Constructor
     void update(float deltaTime); // update a player's properties based on current state
-    void render(SDL_Renderer* renderer); // display a player on the screen
+    void render(); // display a player on the screen
     void handleInput(const bool* keystates); // apply player states based on input
     SDL_FRect getPosition() const; // unsure but seems to get a player's position
     float getAngle() const; 
     SDL_FPoint getVelocity() const;
 
 private:
-    void renderThruster(SDL_Renderer* renderer);
+    void renderThruster();
+    SDL_Renderer* renderer;
 
     SDL_Texture* texture; // texture to render for the player
     SDL_FRect position; // where to render the texture on screen

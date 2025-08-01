@@ -8,10 +8,11 @@ public:
     DebugHUD(SDL_Renderer* renderer);
     void handleInput(const bool* keystates);
     void update(float deltaTime, const Player& player);
-    void render(SDL_Renderer* renderer);
+    void render();
 
 private:
-    void renderText(SDL_Renderer* renderer, const std::string &text, int x, int y);
+    SDL_Renderer* renderer;
+    void renderText(const std::string &text, int x, int y);
     bool lastF3State = false;
     bool visible = false;
     SDL_FRect playerBounds;

@@ -1,12 +1,13 @@
 #include "Constants.h"
 #include "Engine.h"
 #include "Player.h"
+#include "Asteroid.h"
 #include "DebugHUD.h"
 #include <SDL3/SDL.h>
 #include <iostream>
 #include <unordered_map>
 
-
+static Asteroid* asteroid;
 static Player* player;
 static DebugHUD* debugHUD;
 
@@ -15,6 +16,7 @@ static std::unordered_map<SDL_Keycode, bool> keyStates;
 void init(SDL_Renderer* renderer) {
     player = new Player(renderer);
     debugHUD = new DebugHUD(renderer);
+    asteroid = new Asteroid(renderer);
 }
 
 void handleGlobalInput(const SDL_Event& event, const bool* keyboardState) {
@@ -41,14 +43,17 @@ void update(float deltaTime) {
     // Safety clamp to avoid giant simulation steps after pauses.
     if (deltaTime > 0.1f) deltaTime = 0.1f;
     player->update(deltaTime);
+    asteroid->update(deltaTime);
     debugHUD->update(deltaTime, *player);
 }
 
 void render(SDL_Renderer* renderer) {
+    // background
     SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255); // Clear color
     SDL_RenderClear(renderer);
 
-    player->render(renderer);
-    debugHUD->render(renderer);
+    player->render();
+    asteroid->render();
+    debugHUD->render();
     SDL_RenderPresent(renderer);
 }
