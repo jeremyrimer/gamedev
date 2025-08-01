@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(PixelEngine)
+project(HumanAimbot)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -16,9 +16,9 @@ link_directories(${INSTALL_DIR}/lib)
 
 # Define code content
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*.cpp")
-add_executable(PixelEngine ${SRC_FILES})
+add_executable(HumanAimbot ${SRC_FILES})
 
-target_include_directories(PixelEngine PRIVATE 
+target_include_directories(HumanAimbot PRIVATE 
   "${SDL3_ROOT}/include"
   "${SDL3_IMAGE_ROOT}/include"
   "${SDL3_TTF_ROOT}/include"
@@ -28,13 +28,13 @@ target_include_directories(PixelEngine PRIVATE
 )
 
 # Link to SDL3
-target_link_libraries(PixelEngine PRIVATE SDL3 "${SDL3_IMAGE_ROOT}/build/libSDL3_image.dll.a" SDL3_ttf freetype)
+target_link_libraries(HumanAimbot PRIVATE SDL3 "${SDL3_IMAGE_ROOT}/build/libSDL3_image.dll.a" SDL3_ttf freetype)
 
 # Copy DLL to build output
-add_custom_command(TARGET PixelEngine POST_BUILD
+add_custom_command(TARGET HumanAimbot POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${SDL3_ROOT}/bin/SDL3.dll"
     "${SDL3_IMAGE_ROOT}/build/SDL3_image.dll"
     "${INSTALL_DIR}/bin/SDL3_ttf.dll"
-    $<TARGET_FILE_DIR:PixelEngine>
+    $<TARGET_FILE_DIR:HumanAimbot>
 )

@@ -1,10 +1,10 @@
 [Setup]
-AppName=PixelEngine
+AppName=HumanAimbot
 AppVersion=1.0
-DefaultDirName={commonpf}\PixelEngine
-DefaultGroupName=PixelEngine
+DefaultDirName={commonpf}\HumanAimbot
+DefaultGroupName=HumanAimbot
 OutputDir=dist
-OutputBaseFilename=PixelEngineInstaller
+OutputBaseFilename=HumanAimbotInstaller
 Compression=lzma
 SolidCompression=yes
 SetupIconFile="assets\human_aimbot_profile_pic.ico"
@@ -14,8 +14,8 @@ Source: "dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createal
 Source: "assets\human_aimbot_profile_pic.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\Pixel Engine"; Filename: "{app}\PixelEngine.exe"; IconFilename: "{app}\human_aimbot_profile_pic.ico"
+Name: "{group}\Pixel Engine"; Filename: "{app}\HumanAimbot.exe"; IconFilename: "{app}\human_aimbot_profile_pic.ico"
 Name: "{group}\Uninstall Pixel Engine"; Filename: "{uninstallexe}"
 
 [Run]
-Filename: "{app}\PixelEngine.exe"; Description: "Launch Pixel Engine"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\HumanAimbot.exe"; Description: "Launch Pixel Engine"; Flags: nowait postinstall skipifsilent

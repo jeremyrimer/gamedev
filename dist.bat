@@ -9,7 +9,7 @@ if /I "%arg%"=="build" (
 )
 
 :: === CONFIG ===
-set PROJECT_NAME=PixelEngine
+set PROJECT_NAME=HumanAimbot
 set BUILD_DIR=build
 set DIST_DIR=dist
 set SDL_DIR=C:\programming\libs\SDL3-3.2.16\x86_64-w64-mingw32
