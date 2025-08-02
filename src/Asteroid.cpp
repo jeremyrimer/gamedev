@@ -75,8 +75,6 @@ void Asteroid::wrapAroundScreen() {
 }
 
 void Asteroid::render() const {
-
-
     int centerX = static_cast<int>(position.x);
     int centerY = static_cast<int>(position.y);
 
