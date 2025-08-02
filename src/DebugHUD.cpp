@@ -39,19 +39,15 @@ void DebugHUD::render() {
 
     std::string playerXText = "Position X: " + std::to_string(playerBounds.x); 
     std::string playerYText = "Position Y: " + std::to_string(playerBounds.y); 
-    std::string playerHText = "Height: " + std::to_string(playerBounds.h); 
-    std::string playerWText = "Width: " + std::to_string(playerBounds.w);
     std::string playerAngleText = "Angle: " + std::to_string(playerAngle);
     std::string playerXVelocity = "Velocity X: " + std::to_string(playerVelocity.x); 
     std::string playerYVelocity = "Velocity Y: " + std::to_string(playerVelocity.y);
 
     renderText(playerXText, 10, SCREEN_HEIGHT - 20);
     renderText(playerYText, 10, SCREEN_HEIGHT - 35);
-    renderText(playerHText, 10, SCREEN_HEIGHT - 50);
-    renderText(playerWText, 10, SCREEN_HEIGHT - 65);
-    renderText(playerAngleText, 10, SCREEN_HEIGHT - 80);
-    renderText(playerXVelocity, 10, SCREEN_HEIGHT - 95);
-    renderText(playerYVelocity, 10, SCREEN_HEIGHT - 110);
+    renderText(playerAngleText, 10, SCREEN_HEIGHT - 50);
+    renderText(playerXVelocity, 10, SCREEN_HEIGHT - 65);
+    renderText(playerYVelocity, 10, SCREEN_HEIGHT - 80);
 }
 
 void DebugHUD::renderText(const std::string &text, int x, int y) {

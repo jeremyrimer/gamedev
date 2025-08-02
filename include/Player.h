@@ -1,38 +1,47 @@
-// Player.h
 #pragma once
+
 #include <SDL3/SDL.h>
-#include <unordered_map>
+#include "Vector2.h"
 #include "Audio.h"
 
 class Player {
 public:
-    Player(SDL_Renderer* renderer); // Constructor
-    void update(float deltaTime); // update a player's properties based on current state
-    void render(); // display a player on the screen
-    void handleInput(const bool* keystates); // apply player states based on input
-    SDL_FRect getPosition() const; // unsure but seems to get a player's position
-    float getAngle() const; 
-    SDL_FPoint getVelocity() const;
+    Player(SDL_Renderer* renderer);
+
+    void handleInput(const bool* keystates);
+    void update(float deltaTime);
+    void render();
+
+    Vector2 getPosition() const { return position; }
+    Vector2 getSize() const { return size; }
+    float getRadius() const { return size.x * 0.5f; } // ship is square
+    float getAngle() const { return angle; }
+    Vector2 getVelocity() const { return velocity; }
+
+    void setAlive(bool alive) { isAlive = alive; }
+    bool isAliveNow() const { return isAlive; }
 
 private:
-    void renderThruster();
     SDL_Renderer* renderer;
+    SDL_Texture* texture;
 
-    SDL_Texture* texture; // texture to render for the player
-    SDL_FRect position; // where to render the texture on screen
-    SDL_FPoint velocity; // how fast the player is moving represented by the x/y values of a point
-    
-    float angle; // angle the right side of the player is facing
-    float speed; // forward speed
-    float rotationSpeed; // rotational speed
-    float thrust; // how much thrusting affects forward speed
-    float friction; // how much drag on the sprite
+    Vector2 position;  // Center of ship
+    Vector2 size;      // Width and height
+    Vector2 velocity;
 
-    // Input States
-    bool rotatingLeft; 
-    bool rotatingRight;
-    bool thrusting;
-    bool braking;
+    float angle;
+    float speed;
+    float rotationSpeed;
+    float thrust;
+    float friction;
+
+    bool rotatingLeft = false;
+    bool rotatingRight = false;
+    bool thrusting = false;
+    bool braking = false;
+    bool isAlive = true;
 
     Audio thrusterSound;
+
+    void renderThruster();
 };

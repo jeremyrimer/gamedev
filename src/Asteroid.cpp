@@ -70,7 +70,7 @@ std::vector<Asteroid> Asteroid::split() {
 void Asteroid::wrapAroundScreen() {
     if (position.x + radius < 0) position.x = static_cast<float>(SCREEN_WIDTH) + radius;
     if (position.x - radius > static_cast<float>(SCREEN_WIDTH)) position.x = -radius ;
-    if (position.y + radius < 0) position.y += static_cast<float>(SCREEN_HEIGHT) + radius;
+    if (position.y + radius < 0) position.y = static_cast<float>(SCREEN_HEIGHT) + radius;
     if (position.y - radius > static_cast<float>(SCREEN_HEIGHT)) position.y = -radius;
 }
 

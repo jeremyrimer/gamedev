@@ -1,5 +1,6 @@
 #include <SDL3/SDL.h>
 #include "Player.h"
+#include "Vector2.h"
 #include <string>
 #include <SDL3_ttf/SDL_ttf.h>
 
@@ -15,8 +16,8 @@ private:
     void renderText(const std::string &text, int x, int y);
     bool lastF3State = false;
     bool visible = false;
-    SDL_FRect playerBounds;
+    Vector2 playerBounds;
     float playerAngle;
-    SDL_FPoint playerVelocity;
+    Vector2 playerVelocity;
     TTF_Font* font;
 };
