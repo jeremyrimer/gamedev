@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include "Player.h"
 #include "Constants.h"
 #include "Vector2.h"
@@ -19,6 +20,9 @@ Player::Player(SDL_Renderer* renderer)
     
     SDL_Surface* surface = IMG_Load("assets/player-ship.png");
     texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (!texture) {
+        throw std::runtime_error("Failed to load Player Ship image!");
+    }
     SDL_DestroySurface(surface);
 
     size = Vector2(32, 32);
@@ -34,50 +38,52 @@ void Player::handleInput(const bool* keystates) {
 }
 
 void Player::update(float deltaTime) {
-    if (!isAlive) return;
+    if (alive) {
+        if (rotatingLeft) {
+            angle -= rotationSpeed * deltaTime;
+        }
+        if (rotatingRight) {
+            angle += rotationSpeed * deltaTime;
+        }
 
-    if (rotatingLeft) {
-        angle -= rotationSpeed * deltaTime;
-    }
-    if (rotatingRight) {
-        angle += rotationSpeed * deltaTime;
-    }
+        float radians = static_cast<float>(DEG2RAD(angle));
+        Vector2 direction = Vector2(std::cos(radians), std::sin(radians));
 
-    float radians = static_cast<float>(DEG2RAD(angle));
-    Vector2 direction = Vector2(std::cos(radians), std::sin(radians));
+        if (thrusting) {
+            velocity += direction * thrust * deltaTime;
+        }
+        if (braking) {
+            velocity -= direction * thrust * deltaTime;
+        }
 
-    if (thrusting) {
-        velocity += direction * thrust * deltaTime;
-    }
-    if (braking) {
-        velocity -= direction * thrust * deltaTime;
-    }
+        position += velocity * deltaTime;
 
-    position += velocity * deltaTime;
+        float halfW = size.x / 2.0f;
+        float halfH = size.y / 2.0f;
 
-    float halfW = size.x / 2.0f;
-    float halfH = size.y / 2.0f;
+        // Screen wrap
+        if (position.x < -halfW) position.x = SCREEN_WIDTH + halfW;
+        if (position.x > SCREEN_WIDTH + halfW) position.x = -halfW;
+        if (position.y < -halfH) position.y = SCREEN_HEIGHT + halfH;
+        if (position.y > SCREEN_HEIGHT + halfH) position.y = -halfH;
 
-    // Screen wrap
-    if (position.x < -halfW) position.x = SCREEN_WIDTH + halfW;
-    if (position.x > SCREEN_WIDTH + halfW) position.x = -halfW;
-    if (position.y < -halfH) position.y = SCREEN_HEIGHT + halfH;
-    if (position.y > SCREEN_HEIGHT + halfH) position.y = -halfH;
+        // Friction
+        velocity -= velocity * friction * deltaTime;
 
-    // Friction
-    velocity -= velocity * friction * deltaTime;
-
-    // Thruster audio
-    if (thrusting) {
-        thrusterSound.play();
-        thrusterSound.updateForLooping();
+        // Thruster audio
+        if (thrusting) {
+            thrusterSound.play();
+            thrusterSound.updateForLooping();
+        } else {
+            thrusterSound.stop();
+        }
     } else {
         thrusterSound.stop();
     }
 }
 
 void Player::render() {
-    if (!isAlive) return;
+    if (!alive) return;
 
     SDL_FRect dest;
     dest.w = size.x;
@@ -119,4 +125,20 @@ void Player::renderThruster() {
 
         SDL_RenderGeometry(renderer, nullptr, verts, 3, nullptr, 0);
     }
+}
+
+Vector2 Player::getPosition() const {
+    return position;
+}
+
+Vector2 Player::getSize() const {
+    return size;
+}
+
+void Player::setAlive(bool liveOrDead) { 
+    alive = liveOrDead; 
+}
+
+bool Player::isAlive() const {
+    return alive;
 }

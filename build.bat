@@ -2,6 +2,7 @@
 setlocal
 
 set arg=%1
+cls;
 
 REM === CONFIGURE YOUR INSTALL LOCATION HERE ===
 set INSTALL_DIR=C:\programming\libs\install

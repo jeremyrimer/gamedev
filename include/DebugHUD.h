@@ -1,3 +1,4 @@
+#pragma once
 #include <SDL3/SDL.h>
 #include "Player.h"
 #include "Vector2.h"
@@ -6,12 +7,13 @@
 
 class DebugHUD {
 public:
-    DebugHUD(SDL_Renderer* renderer);
+    DebugHUD(SDL_Renderer* renderer, Player* player);
     void handleInput(const bool* keystates);
-    void update(float deltaTime, const Player& player);
+    void update(float deltaTime);
     void render();
 
 private:
+    Player* player;
     SDL_Renderer* renderer;
     void renderText(const std::string &text, int x, int y);
     bool lastF3State = false;

@@ -12,13 +12,13 @@ enum class AsteroidSize {
 
 class Asteroid {
     public:
-        
-
         Asteroid(SDL_Renderer* renderer, Vector2 pos, Vector2 vel, AsteroidSize sz);
         Asteroid(SDL_Renderer* renderer);
         void update(float deltaTime);
         void render() const;
         bool isSmallest() const;
+        Vector2 getPosition() const;
+        int getRadius() const;
 
         // Split this asteroid into smaller ones
         std::vector<Asteroid> split();

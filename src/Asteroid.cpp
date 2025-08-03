@@ -91,3 +91,11 @@ void Asteroid::render() const {
         }
     }
 }
+
+Vector2 Asteroid::getPosition() const {
+    return position;
+}
+
+int Asteroid::getRadius() const {
+    return radius;
+}

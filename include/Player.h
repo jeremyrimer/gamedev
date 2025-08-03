@@ -12,14 +12,13 @@ public:
     void update(float deltaTime);
     void render();
 
-    Vector2 getPosition() const { return position; }
-    Vector2 getSize() const { return size; }
-    float getRadius() const { return size.x * 0.5f; } // ship is square
+    Vector2 getPosition() const;
+    Vector2 getSize() const;
     float getAngle() const { return angle; }
     Vector2 getVelocity() const { return velocity; }
 
-    void setAlive(bool alive) { isAlive = alive; }
-    bool isAliveNow() const { return isAlive; }
+    void setAlive(bool liveOrDead);
+    bool isAlive() const;
 
 private:
     SDL_Renderer* renderer;
@@ -39,7 +38,7 @@ private:
     bool rotatingRight = false;
     bool thrusting = false;
     bool braking = false;
-    bool isAlive = true;
+    bool alive = true;
 
     Audio thrusterSound;
 

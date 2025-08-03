@@ -5,14 +5,17 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <iostream>
 #include <Constants.h>
+#include <stdexcept>
 
-DebugHUD::DebugHUD(SDL_Renderer* renderer) : renderer(renderer) {
-  // CONSTRUCTOR...
-  font = TTF_OpenFont("assets/fonts/jb.ttf", 12); // number is font size
-  if (!font) {
-      SDL_Log("Failed to load font: %s", SDL_GetError());
-      // handle error, maybe disable debug HUD rendering
-  }
+DebugHUD::DebugHUD(SDL_Renderer* renderer, Player* player) : 
+  renderer(renderer), 
+  player(player) {
+    font = TTF_OpenFont("assets/fonts/jb.ttf", 12); // number is font size
+    if (!font) {
+        SDL_Log("Failed to load font: %s", SDL_GetError());
+        throw std::runtime_error("Failed to load DebugHUD Font!");
+    }
+    std::cout << "DebugHUD Font Loaded" << std::endl; 
 }
 
 void DebugHUD::handleInput(const bool* keystates) {
@@ -26,11 +29,11 @@ void DebugHUD::handleInput(const bool* keystates) {
     lastF3State = currentF3State;
 }
 
-void DebugHUD::update(float deltaTime, const Player& player) {
+void DebugHUD::update(float deltaTime) {
     if (visible) {
-        playerBounds = player.getPosition();
-        playerAngle = player.getAngle();
-        playerVelocity = player.getVelocity();
+        playerBounds = player->getPosition();
+        playerAngle = player->getAngle();
+        playerVelocity = player->getVelocity();
     }
 }
 
@@ -55,7 +58,7 @@ void DebugHUD::renderText(const std::string &text, int x, int y) {
 
     SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), text.size(), color);
     if (!surface) {
-        SDL_Log("TTF_RenderText_Blended error: %s", SDL_GetError());
+        SDL_Log("TTF_RenderText_Solid error: %s", SDL_GetError());
         return;
     }
 
