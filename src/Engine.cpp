@@ -15,7 +15,7 @@ Engine::Engine(SDL_Renderer* renderer)
 
 // Destructor
 Engine::~Engine() {
-    // Cleanup if needed
+    Explosion::UnloadTexture();
 }
 
 void Engine::init() {
@@ -25,6 +25,8 @@ void Engine::init() {
     for (int i = 0; i < 10; ++i) {
         asteroids.emplace_back(renderer);
     }
+
+    Explosion::LoadTexture(renderer);
 
     gameState = GameState::PLAYING;
 }
@@ -51,6 +53,9 @@ void Engine::update(float deltaTime) {
     for (auto& asteroid : asteroids) {
         asteroid.update(deltaTime);
     }
+    for (auto& explosion : explosions) {
+        explosion->update(deltaTime);
+    }
     debugHUD.update(deltaTime);
 }
 
@@ -64,6 +69,9 @@ void Engine::render() {
 
     for (const auto& asteroid : asteroids) {
         asteroid.render();
+    }
+    for (const auto& explosion : explosions) {
+        explosion->draw();
     }
 
     debugHUD.render();
@@ -102,7 +110,18 @@ void Engine::collisionCheck() {
 }
 
 void Engine::handlePlayerDeath() {
-    player.setAlive(false);
-    // TODO: spawn explosion, play sound, etc.
+    if (player.isAlive()) {
+        player.setAlive(false);
+        // EXPLODE
+        explosions.emplace_back(
+            std::make_unique<Explosion>(
+                renderer,
+                player.getPosition(),
+                player.getSize().x*3,
+                0.1f
+            )
+        );
+    }
+    
     gameState = GameState::GAMEOVER;
 }

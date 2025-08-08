@@ -1,10 +1,12 @@
 #pragma once
 #include <SDL3/SDL.h>
 #include <vector>
+#include <memory>
 #include "Vector2.h"
 #include "Player.h"
 #include "Asteroid.h"
 #include "DebugHUD.h"
+#include "Explosion.h"
 
 enum class GameState {
     PLAYING,
@@ -21,12 +23,15 @@ public:
     void update(float deltaTime);
     void render();
 
+    static SDL_Texture* texture; // Shared by all explosions
+
 private:
     SDL_Renderer* renderer;
     Text gameOverFont;
 
     Player player;
     std::vector<Asteroid> asteroids;
+    std::vector<std::unique_ptr<Explosion>> explosions;
     DebugHUD debugHUD;
 
     GameState gameState = GameState::PLAYING;

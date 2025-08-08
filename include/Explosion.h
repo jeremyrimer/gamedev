@@ -1,24 +1,27 @@
 #pragma once
 #include <SDL3/SDL.h>
-#include "Vector2.h" // Your own Vector2 struct/class
+#include "Vector2.h"
 
 class Explosion {
 public:
-    Explosion(SDL_Renderer* renderer, const Vector2& position, SDL_Texture* spriteSheet, int frameW, int frameH, int totalFrames, float frameTime);
-
-    void Update(float deltaTime);
-    void Draw(SDL_Renderer* renderer) const;
-    bool IsFinished() const { return finished; }
-
-private:
     SDL_Renderer* renderer;
-    Vector2 pos;
-    SDL_Texture* texture;
-    int frameWidth;
-    int frameHeight;
-    int currentFrame;
-    int totalFrames;
-    float frameTime;   // seconds per frame
-    float timer;
-    bool finished;
+    Vector2 position;      // Center position
+    float size;            // Width & height
+    int currentFrame;      // Current frame index
+    float frameTime;       // Seconds per frame
+    float elapsedTime;     // Time accumulated for frame switching
+    bool finished;         // Whether animation is done
+
+    Explosion(SDL_Renderer* renderer, Vector2 pos, float size, float frameDuration);
+
+    void update(float delta);
+    void draw();
+
+    static constexpr int leftMargin = 50;
+    static constexpr int rightMargin = 50;
+    static constexpr int spacing = 30;    
+    static constexpr int frameCount = 7;
+    static SDL_Texture* texture;
+    static bool LoadTexture(SDL_Renderer* renderer);
+    static void UnloadTexture();
 };

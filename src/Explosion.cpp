@@ -2,60 +2,60 @@
 #include <SDL3_image/SDL_image.h>
 #include <iostream>
 
-Explosion::Explosion(SDL_Renderer* renderer, const Vector2& position, SDL_Texture* spriteSheet, int frameW, int frameH, int totalFrames, float frameTime)
-    : renderer(renderer),
-      pos(position),
-      texture(spriteSheet),
-      frameWidth(frameW),
-      frameHeight(frameH),
-      currentFrame(0),
-      totalFrames(totalFrames),
-      frameTime(frameTime),
-      timer(0.0f),
-      finished(false)
-{
-    SDL_Texture* explosionTexture = IMG_LoadTexture(renderer, "assets/imagesexplosion.png");
-    if (!explosionTexture) {
-        SDL_Log("Failed to load explosion texture: %s", SDL_GetError());
-    } else {
-        std::cout << "Explosion Texture Loaded" << std::endl;
-    }
+// Static member definition
+SDL_Texture* Explosion::texture = nullptr;
 
-    SDL_Surface* surface = IMG_Load("assets/explosion.png");
-    if (!surface) {
-        SDL_Log("Failed to load image: %s", SDL_GetError());
+Explosion::Explosion(SDL_Renderer* ren, Vector2 pos, float size, float frameDuration)
+    : position(pos),
+      renderer(ren),
+      currentFrame(0),
+      size(size),
+      frameTime(frameDuration),
+      elapsedTime(0.0f),
+      finished(false) {}
+
+bool Explosion::LoadTexture(SDL_Renderer* ren) {
+    texture = IMG_LoadTexture(ren, "assets/images/explosion_transparent.png");
+    if (!texture) {
+        SDL_Log("Failed to load explosion texture: %s", SDL_GetError());
+        return false;
+    } else {
+        std::cout << "Loaded Explosion Texture" << std::endl;
+    }
+    return true;
+}
+
+void Explosion::UnloadTexture() {
+    if (texture) {
+        SDL_DestroyTexture(texture);
+        texture = nullptr;
     }
 }
 
-void Explosion::Update(float deltaTime) {
+void Explosion::update(float delta) {
     if (finished) return;
 
-    timer += deltaTime;
-    if (timer >= frameTime) {
-        timer -= frameTime;
+    elapsedTime += delta;
+    while (elapsedTime >= frameTime) {
+        elapsedTime -= frameTime;
         currentFrame++;
-        if (currentFrame >= totalFrames) {
+        if (currentFrame >= frameCount) {
             finished = true;
+            break;
         }
     }
 }
 
-void Explosion::Draw(SDL_Renderer* renderer) const {
-    if (finished) return;
+void Explosion::draw() {
+    if (finished || !texture) return;
 
-    SDL_FRect src = {
-        static_cast<float>(currentFrame * frameWidth),
-        0.0f,
-        static_cast<float>(frameWidth),
-        static_cast<float>(frameHeight)
-    };
+    float texW, texH;
+    SDL_GetTextureSize(texture, &texW, &texH);
+    
+    int frameW = texW / frameCount;
 
-    SDL_FRect dst = {
-        pos.x - frameWidth / 2.0f,
-        pos.y - frameHeight / 2.0f,
-        static_cast<float>(frameWidth),
-        static_cast<float>(frameHeight)
-    };
+    SDL_FRect src = { float(currentFrame * frameW), 0, float(frameW), float(texH) };
+    SDL_FRect dst = { position.x - size / 2, position.y - size / 2, size, size };
 
     SDL_RenderTexture(renderer, texture, &src, &dst);
 }
