@@ -94,7 +94,7 @@ void Engine::collisionCheck() {
         if (circleRectangleCollision(
             asteroid.getPosition(), asteroid.getRadius(),
             playerTopLeft, player.getSize().x, player.getSize().y)) {
-                std::cout << "COLLISION!" << std::endl;
+                // std::cout << "COLLISION!" << std::endl;
                 handlePlayerDeath();
                 break;
         }
