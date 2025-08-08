@@ -7,11 +7,11 @@ OutputDir=dist
 OutputBaseFilename=HumanAimbotInstaller
 Compression=lzma
 SolidCompression=yes
-SetupIconFile="assets\human_aimbot_profile_pic.ico"
+SetupIconFile="assets\images\human_aimbot_profile_pic.ico"
 
 [Files]
 Source: "dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "assets\human_aimbot_profile_pic.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "assets\images\human_aimbot_profile_pic.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\Pixel Engine"; Filename: "{app}\HumanAimbot.exe"; IconFilename: "{app}\human_aimbot_profile_pic.ico"

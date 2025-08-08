@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 
     while (running) {
         // Server Tick
-        std::cout << "TICK" << std::endl;
+        // std::cout << "TICK" << std::endl;
         Uint64 now = SDL_GetPerformanceCounter();
         float deltaTime = static_cast<float>((now - prevCounter) / freq);
 
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 
 bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
     // WINDOW setup
-    SDL_Surface* iconSurface = IMG_Load("assets/human_aimbot_profile_pic.ico");  
+    SDL_Surface* iconSurface = IMG_Load("assets/images/human_aimbot_profile_pic.ico");  
     if (!iconSurface) {
         SDL_Log("IMG_LoadSurface failed: %s", SDL_GetError());
         std::cerr << "[SDL3_IMAGE] Icon Initialization failed\n";

@@ -18,7 +18,7 @@ Player::Player(SDL_Renderer* renderer)
       friction(PLAYER_FRICTION),
       thrusterSound("assets/sound/thrusters.wav") {
     
-    SDL_Surface* surface = IMG_Load("assets/player-ship.png");
+    SDL_Surface* surface = IMG_Load("assets/images/player-ship.png");
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (!texture) {
         throw std::runtime_error("Failed to load Player Ship image!");
