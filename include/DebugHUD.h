@@ -4,6 +4,7 @@
 #include "Vector2.h"
 #include <string>
 #include <SDL3_ttf/SDL_ttf.h>
+#include "Text.h"
 
 class DebugHUD {
 public:
@@ -21,5 +22,5 @@ private:
     Vector2 playerBounds;
     float playerAngle;
     Vector2 playerVelocity;
-    TTF_Font* font;
+    Text font;
 };

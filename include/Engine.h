@@ -23,7 +23,7 @@ public:
 
 private:
     SDL_Renderer* renderer;
-    TTF_Font* gameOverFont;
+    Text gameOverFont;
 
     Player player;
     std::vector<Asteroid> asteroids;

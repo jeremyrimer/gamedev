@@ -41,9 +41,11 @@ void Player::update(float deltaTime) {
     if (alive) {
         if (rotatingLeft) {
             angle -= rotationSpeed * deltaTime;
+            // TODO - set to 0 past 360
         }
         if (rotatingRight) {
             angle += rotationSpeed * deltaTime;
+            // TODO - set to 360 when past 0
         }
 
         float radians = static_cast<float>(DEG2RAD(angle));

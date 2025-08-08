@@ -2,13 +2,16 @@
 #include "Constants.h"
 #include "Asteroid.h"
 #include "DebugHUD.h"
+#include "Text.h"
 #include <iostream>
+
 
 // Constructor
 Engine::Engine(SDL_Renderer* renderer)
     : renderer(renderer),
       player(renderer),
-      debugHUD(renderer, &player) {}
+      debugHUD(renderer, &player),
+      gameOverFont(Text(renderer, "assets/fonts/jb.ttf", 94)) {}
 
 // Destructor
 Engine::~Engine() {
@@ -22,13 +25,6 @@ void Engine::init() {
     for (int i = 0; i < 10; ++i) {
         asteroids.emplace_back(renderer);
     }
-
-    gameOverFont = TTF_OpenFont("assets/fonts/jb.ttf", 94); // number is font size
-    if (!gameOverFont) {
-        SDL_Log("Failed to load Engine's gameOverFont: %s", SDL_GetError());
-        throw std::runtime_error("Failed to load Engine's gameOverFont Font!");
-    }
-    std::cout << "Engine's gameOverFont Loaded" << std::endl; 
 
     gameState = GameState::PLAYING;
 }
@@ -73,34 +69,7 @@ void Engine::render() {
     debugHUD.render();
 
     if (gameState == GameState::GAMEOVER) {
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_FRect rect = { SCREEN_WIDTH / 4.0f, SCREEN_HEIGHT / 3.0f, SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 6.0f };
-        SDL_RenderFillRect(renderer, &rect);
-        
-        std::string gameOver = "GAME OVER";
-
-        SDL_Color color = {0};
-
-        SDL_Surface* surface = TTF_RenderText_Blended(gameOverFont, gameOver.c_str(), gameOver.size(), color);
-        
-        if (!surface) {
-            SDL_Log("TTF_RenderText_Blended error: %s", SDL_GetError());
-            return;
-        }
-
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-        if (!texture) {
-            SDL_Log("SDL_CreateTextureFromSurface error: %s", SDL_GetError());
-            SDL_DestroySurface(surface);
-            return;
-        }
-        SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
-
-        SDL_FRect dst = { SCREEN_WIDTH / 4.0f, SCREEN_HEIGHT / 3.0f, static_cast<float>(surface->w), static_cast<float>(surface->h) };
-        SDL_RenderTexture(renderer, texture, nullptr, &dst);
-
-        SDL_DestroyTexture(texture);
-        SDL_DestroySurface(surface);
+        gameOverFont.display("GAME OVER", SCREEN_WIDTH / 4.0f, SCREEN_HEIGHT / 3.0f, 255, 0, 0, 255);
     }
 
     SDL_RenderPresent(renderer);

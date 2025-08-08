@@ -6,17 +6,13 @@
 #include <iostream>
 #include <Constants.h>
 #include <stdexcept>
+#include "Text.h"
+
 
 DebugHUD::DebugHUD(SDL_Renderer* renderer, Player* player) : 
   renderer(renderer), 
-  player(player) {
-    font = TTF_OpenFont("assets/fonts/jb.ttf", 12); // number is font size
-    if (!font) {
-        SDL_Log("Failed to load font: %s", SDL_GetError());
-        throw std::runtime_error("Failed to load DebugHUD Font!");
-    }
-    std::cout << "DebugHUD Font Loaded" << std::endl; 
-}
+  player(player),
+  font(Text(renderer, "assets/fonts/jb.ttf", 12)) {}
 
 void DebugHUD::handleInput(const bool* keystates) {
     bool currentF3State = keystates[SDL_SCANCODE_F3];
@@ -46,33 +42,10 @@ void DebugHUD::render() {
     std::string playerXVelocity = "Velocity X: " + std::to_string(playerVelocity.x); 
     std::string playerYVelocity = "Velocity Y: " + std::to_string(playerVelocity.y);
 
-    renderText(playerXText, 10, SCREEN_HEIGHT - 20);
-    renderText(playerYText, 10, SCREEN_HEIGHT - 35);
-    renderText(playerAngleText, 10, SCREEN_HEIGHT - 50);
-    renderText(playerXVelocity, 10, SCREEN_HEIGHT - 65);
-    renderText(playerYVelocity, 10, SCREEN_HEIGHT - 80);
-}
-
-void DebugHUD::renderText(const std::string &text, int x, int y) {
-    SDL_Color color = {255, 255, 255, 255};
-
-    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), text.size(), color);
-    if (!surface) {
-        SDL_Log("TTF_RenderText_Solid error: %s", SDL_GetError());
-        return;
-    }
-
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if (!texture) {
-        SDL_Log("SDL_CreateTextureFromSurface error: %s", SDL_GetError());
-        SDL_DestroySurface(surface);
-        return;
-    }
-    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
-
-    SDL_FRect dst = { static_cast<float>(x), static_cast<float>(y), static_cast<float>(surface->w), static_cast<float>(surface->h) };
-    SDL_RenderTexture(renderer, texture, nullptr, &dst);
-
-    SDL_DestroyTexture(texture);
-    SDL_DestroySurface(surface);
+    font.display(playerXText, 10, SCREEN_HEIGHT - 20, 255, 255, 255, 255);
+    font.display(playerXText, 10, SCREEN_HEIGHT - 20, 255, 255, 255, 255);
+    font.display(playerYText, 10, SCREEN_HEIGHT - 35, 255, 255, 255, 255);
+    font.display(playerAngleText, 10, SCREEN_HEIGHT - 50, 255, 255, 255, 255);
+    font.display(playerXVelocity, 10, SCREEN_HEIGHT - 65, 255, 255, 255, 255);
+    font.display(playerYVelocity, 10, SCREEN_HEIGHT - 80, 255, 255, 255, 255);
 }
