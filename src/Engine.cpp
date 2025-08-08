@@ -118,7 +118,8 @@ void Engine::handlePlayerDeath() {
                 renderer,
                 player.getPosition(),
                 player.getSize().x*3,
-                0.1f
+                0.1f,
+                "assets/sound/spaceship-explosion.wav"
             )
         );
     }

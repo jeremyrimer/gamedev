@@ -5,14 +5,15 @@
 // Static member definition
 SDL_Texture* Explosion::texture = nullptr;
 
-Explosion::Explosion(SDL_Renderer* ren, Vector2 pos, float size, float frameDuration)
+Explosion::Explosion(SDL_Renderer* ren, Vector2 pos, float size, float frameDuration, const std::string soundFilePath)
     : position(pos),
       renderer(ren),
       currentFrame(0),
       size(size),
       frameTime(frameDuration),
       elapsedTime(0.0f),
-      finished(false) {}
+      finished(false),
+      explosionSound(soundFilePath) {}
 
 bool Explosion::LoadTexture(SDL_Renderer* ren) {
     texture = IMG_LoadTexture(ren, "assets/images/explosion_transparent.png");
@@ -34,6 +35,11 @@ void Explosion::UnloadTexture() {
 
 void Explosion::update(float delta) {
     if (finished) return;
+
+    if (!explosionSound.isPlaying()) {
+        std::cout << "playing explosion" << std::endl;
+        explosionSound.play();
+    }
 
     elapsedTime += delta;
     while (elapsedTime >= frameTime) {

@@ -65,12 +65,10 @@ void Audio::play() {
         }
     }
 
-    for (int i = 0; i < 3; ++i) {
-        if (volume < 0.99f) {
-            SDL_PutAudioStreamData(stream, tempBuf, bufferLen);
-        } else {
-            SDL_PutAudioStreamData(stream, buffer, bufferLen);
-        }
+    if (volume < 0.99f) {
+        SDL_PutAudioStreamData(stream, tempBuf, bufferLen);
+    } else {
+        SDL_PutAudioStreamData(stream, buffer, bufferLen);
     }
 
     if (tempBuf) SDL_free(tempBuf);

@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL3/SDL.h>
 #include "Vector2.h"
+#include "Audio.h"
 
 class Explosion {
 public:
@@ -11,8 +12,9 @@ public:
     float frameTime;       // Seconds per frame
     float elapsedTime;     // Time accumulated for frame switching
     bool finished;         // Whether animation is done
+    Audio explosionSound;  // sound to play when blowing up
 
-    Explosion(SDL_Renderer* renderer, Vector2 pos, float size, float frameDuration);
+    Explosion(SDL_Renderer* renderer, Vector2 pos, float size, float frameDuration, const std::string soundFilePath);
 
     void update(float delta);
     void draw();
