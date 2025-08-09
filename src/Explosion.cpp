@@ -13,7 +13,9 @@ Explosion::Explosion(SDL_Renderer* ren, Vector2 pos, float size, float frameDura
       frameTime(frameDuration),
       elapsedTime(0.0f),
       finished(false),
-      explosionSound(soundFilePath) {}
+      explosionSound(soundFilePath) {
+        explosionSound.setVolume(0.3f);
+      }
 
 bool Explosion::LoadTexture(SDL_Renderer* ren) {
     texture = IMG_LoadTexture(ren, "assets/images/explosion_transparent.png");
