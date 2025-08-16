@@ -21,7 +21,6 @@ Engine::~Engine() {
 void Engine::init() {
     asteroids.clear();
 
-    // 10 is number of asteroids... we'll have to make that round based
     for (int i = 0; i < 10; ++i) {
         asteroids.emplace_back(renderer);
     }
@@ -47,8 +46,9 @@ void Engine::handleGlobalInput(const SDL_Event& event, const bool* keyboardState
 }
 
 void Engine::update(float deltaTime) {
-    // std::cout << "Engine Updating" << std::endl;
+    // std::cout << "Player Updating" << std::endl;
     player.update(deltaTime);
+
     collisionCheck();
     for (auto& asteroid : asteroids) {
         asteroid.update(deltaTime);
@@ -66,13 +66,24 @@ void Engine::render() {
     SDL_RenderClear(renderer);
 
     player.render();
+    // std::cout << "After Player Render" << std::endl;
 
     for (const auto& asteroid : asteroids) {
         asteroid.render();
     }
+    // std::cout << "After asteroids render" << std::endl;
     for (const auto& explosion : explosions) {
         explosion->draw();
     }
+    // std::cout << "After explosions render" << std::endl;
+    for (auto it = explosions.begin(); it != explosions.end(); ) {
+        if ((*it)->isFinished()) {
+            it = explosions.erase(it);  // erase returns the next iterator
+        } else {
+            ++it;
+        }
+    }
+    // std::cout << "After explosions removal" << std::endl;
 
     debugHUD.render();
 
@@ -95,17 +106,37 @@ bool Engine::circleRectangleCollision(const Vector2& circleCenter, float circleR
 }
 
 void Engine::collisionCheck() {
-    // std::cout << "CHECKING COLLISIONS" << std::endl;
+    if (!player.isAlive()) return;
+
     Vector2 playerTopLeft = player.getPosition() - player.getSize() * 0.5f;
 
-    for (const auto& asteroid : asteroids) {
+    std::vector<Asteroid> newPieces;
+    std::vector<size_t> toRemove;
+
+    for (size_t i = 0; i < asteroids.size(); ++i) {
         if (circleRectangleCollision(
-            asteroid.getPosition(), asteroid.getRadius(),
+            asteroids[i].getPosition(), asteroids[i].getRadius(),
             playerTopLeft, player.getSize().x, player.getSize().y)) {
-                // std::cout << "COLLISION!" << std::endl;
-                handlePlayerDeath();
-                break;
+            handlePlayerDeath();
+
+            // Add split pieces to newPieces
+            newPieces = asteroids[i].split(renderer);
+            toRemove.push_back(i);
+
+            break; // stop after one collision
         }
+    }
+
+    // Remove asteroids in reverse order so indices stay valid
+    for (auto it = toRemove.rbegin(); it != toRemove.rend(); ++it) {
+        // std::cout << "=== Erasing blown asteroid" << std::endl;
+        asteroids.erase(asteroids.begin() + *it);
+    }
+
+    // Append new pieces
+    if (!newPieces.empty()) {
+        // std::cout << "=== Adding " << newPieces.size() << " asteroids" << std::endl;
+        asteroids.insert(asteroids.end(), newPieces.begin(), newPieces.end());
     }
 }
 
@@ -119,7 +150,8 @@ void Engine::handlePlayerDeath() {
                 player.getPosition(),
                 player.getSize().x*3,
                 0.1f,
-                "assets/sound/spaceship-explosion.wav"
+                "assets/sound/spaceship-explosion.wav",
+                0.3f
             )
         );
     }
