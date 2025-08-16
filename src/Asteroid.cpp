@@ -9,25 +9,6 @@
 Asteroid::Asteroid(SDL_Renderer* renderer, Vector2 pos, Vector2 vel, AsteroidSize sz)
     : position(pos), velocity(vel), size(sz), renderer(renderer)
 {
-    rotation = static_cast<float>(rand() % 360);
-    rotationSpeed = ((rand() % 200) - 100) / 100.0f; // -1.0 to 1.0
-}
-
-Asteroid::Asteroid(SDL_Renderer* renderer) : renderer(renderer) {
-     // Random position anywhere on screen
-    float px = static_cast<float>(rand() / RAND_MAX * SCREEN_WIDTH);
-    float py = static_cast<float>(rand() / RAND_MAX * SCREEN_HEIGHT);
-    position = Vector2(px, py);
-    
-    // Random angle and speed for velocity
-    float angle = static_cast<float>(rand() % 360) * (M_PI / 180.0f);
-    float speed = 50.0f + rand() % 50; // 50–100
-    velocity = Vector2(std::cos(angle) * speed, std::sin(angle) * speed);
-
-    // Random size: large, medium, or small (weighted if you want)
-    int r = rand() % 3;
-    size = static_cast<AsteroidSize>(r + 1); // enum values 1 = SMALL to 3 = LARGE
-
     switch (size) {
         case AsteroidSize::LARGE:  radius = 40; break;
         case AsteroidSize::MEDIUM: radius = 25; break;
@@ -36,6 +17,23 @@ Asteroid::Asteroid(SDL_Renderer* renderer) : renderer(renderer) {
 
     rotation = static_cast<float>(rand() % 360);
     rotationSpeed = ((rand() % 200) - 100) / 100.0f; // -1.0 to 1.0
+}
+
+Asteroid::Asteroid(SDL_Renderer* renderer)
+    : Asteroid(
+        renderer,
+        Vector2(                           // random position
+            static_cast<float>(rand() % SCREEN_WIDTH),
+            static_cast<float>(rand() % SCREEN_HEIGHT)
+        ),
+        Vector2(                           // random velocity
+            std::cos((rand() % 360) * (M_PI / 180.0f)) * (50.0f + rand() % 50),
+            std::sin((rand() % 360) * (M_PI / 180.0f)) * (50.0f + rand() % 50)
+        ),
+        static_cast<AsteroidSize>((rand() % 3) + 1) // random size
+      )
+{
+    // Nothing else needed here!
 }
 
 
@@ -50,7 +48,7 @@ bool Asteroid::isSmallest() const {
 }
 
 // Split this asteroid into smaller ones
-std::vector<Asteroid> Asteroid::split() {
+std::vector<Asteroid> Asteroid::split(SDL_Renderer* newRenderer) {
     std::vector<Asteroid> pieces;
     if (isSmallest()) return pieces;
 
@@ -61,7 +59,7 @@ std::vector<Asteroid> Asteroid::split() {
         float speed = 50.0f + rand() % 50;
         Vector2 newVel(std::cos(angle) * speed, std::sin(angle) * speed);
 
-        pieces.emplace_back(renderer, position, newVel, newSize);
+        pieces.emplace_back(newRenderer, position, newVel, newSize);
     }
 
     return pieces;
@@ -75,10 +73,13 @@ void Asteroid::wrapAroundScreen() {
 }
 
 void Asteroid::render() const {
+    if (!renderer) {
+        SDL_Log("ERROR: Asteroid has null renderer pointer!");
+        return; // avoid crash
+    }
     int centerX = static_cast<int>(position.x);
     int centerY = static_cast<int>(position.y);
 
-    // Draw filled or outline circle (assuming your drawCircle function)
     // Placeholder: use SDL_RenderPoint or your own drawCircle()
     for (int w = 0; w < radius * 2; w++) {
         for (int h = 0; h < radius * 2; h++) {
