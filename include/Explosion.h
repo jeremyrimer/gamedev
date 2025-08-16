@@ -13,8 +13,9 @@ public:
     float elapsedTime;     // Time accumulated for frame switching
     bool finished;         // Whether animation is done
     Audio explosionSound;  // sound to play when blowing up
+    bool isFinished();
 
-    Explosion(SDL_Renderer* renderer, Vector2 pos, float size, float frameDuration, const std::string soundFilePath);
+    Explosion(SDL_Renderer* renderer, Vector2 pos, float size, float frameDuration, const std::string soundFilePath, float volume);
 
     void update(float delta);
     void draw();

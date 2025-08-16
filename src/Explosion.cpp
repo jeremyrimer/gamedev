@@ -5,7 +5,7 @@
 // Static member definition
 SDL_Texture* Explosion::texture = nullptr;
 
-Explosion::Explosion(SDL_Renderer* ren, Vector2 pos, float size, float frameDuration, const std::string soundFilePath)
+Explosion::Explosion(SDL_Renderer* ren, Vector2 pos, float size, float frameDuration, const std::string soundFilePath, float volume)
     : position(pos),
       renderer(ren),
       currentFrame(0),
@@ -14,7 +14,7 @@ Explosion::Explosion(SDL_Renderer* ren, Vector2 pos, float size, float frameDura
       elapsedTime(0.0f),
       finished(false),
       explosionSound(soundFilePath) {
-        explosionSound.setVolume(0.3f);
+        explosionSound.setVolume(volume);
       }
 
 bool Explosion::LoadTexture(SDL_Renderer* ren) {
@@ -39,7 +39,7 @@ void Explosion::update(float delta) {
     if (finished) return;
 
     if (!explosionSound.isPlaying()) {
-        std::cout << "playing explosion" << std::endl;
+        // std::cout << "playing explosion" << std::endl;
         explosionSound.play();
     }
 
@@ -66,4 +66,8 @@ void Explosion::draw() {
     SDL_FRect dst = { position.x - size / 2, position.y - size / 2, size, size };
 
     SDL_RenderTexture(renderer, texture, &src, &dst);
+}
+
+bool Explosion::isFinished() {
+    return finished && !explosionSound.isPlaying();
 }
