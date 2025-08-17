@@ -22,7 +22,7 @@ void Engine::init() {
     asteroids.clear();
 
     for (int i = 0; i < 10; ++i) {
-        asteroids.emplace_back(renderer);
+        asteroids.emplace_back(renderer, player.getPosition());
     }
 
     Explosion::LoadTexture(renderer);

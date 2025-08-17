@@ -19,13 +19,10 @@ Asteroid::Asteroid(SDL_Renderer* renderer, Vector2 pos, Vector2 vel, AsteroidSiz
     rotationSpeed = ((rand() % 200) - 100) / 100.0f; // -1.0 to 1.0
 }
 
-Asteroid::Asteroid(SDL_Renderer* renderer)
+Asteroid::Asteroid(SDL_Renderer* renderer, const Vector2& playerPos)
     : Asteroid(
         renderer,
-        Vector2(                           // random position
-            static_cast<float>(rand() % SCREEN_WIDTH),
-            static_cast<float>(rand() % SCREEN_HEIGHT)
-        ),
+        generateSpawnPosition(playerPos),
         Vector2(                           // random velocity
             std::cos((rand() % 360) * (M_PI / 180.0f)) * (50.0f + rand() % 50),
             std::sin((rand() % 360) * (M_PI / 180.0f)) * (50.0f + rand() % 50)
@@ -36,6 +33,22 @@ Asteroid::Asteroid(SDL_Renderer* renderer)
     // Nothing else needed here!
 }
 
+Vector2 Asteroid::generateSpawnPosition(const Vector2& playerPos) {
+    while (true) {
+        float px = static_cast<float>(rand() % SCREEN_WIDTH);
+        float py = static_cast<float>(rand() % SCREEN_HEIGHT);
+        Vector2 pos(px, py);
+
+        // distance from player
+        float dx = pos.x - playerPos.x;
+        float dy = pos.y - playerPos.y;
+        float distSq = dx*dx + dy*dy;
+
+        if (distSq >= SAFE_SPAWN_RADIUS * SAFE_SPAWN_RADIUS) {
+            return pos; // found a safe spawn
+        }
+    }
+}
 
 void Asteroid::update(float deltaTime) {
     position += velocity * deltaTime;

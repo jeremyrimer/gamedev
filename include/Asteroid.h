@@ -10,10 +10,12 @@ enum class AsteroidSize {
     SMALL = 1
 };
 
+static const float SAFE_SPAWN_RADIUS = 300.0f;
+
 class Asteroid {
     public:
         Asteroid(SDL_Renderer* renderer, Vector2 pos, Vector2 vel, AsteroidSize sz);
-        Asteroid(SDL_Renderer* renderer);
+        Asteroid(SDL_Renderer* renderer, const Vector2& playerPos);
         void update(float deltaTime);
         void render() const;
         bool isSmallest() const;
@@ -26,6 +28,7 @@ class Asteroid {
     private:
         SDL_Renderer* renderer;
         void wrapAroundScreen();
+        Vector2 generateSpawnPosition(const Vector2& playerPos);
         int radius;
         float rotation;
         float rotationSpeed;
