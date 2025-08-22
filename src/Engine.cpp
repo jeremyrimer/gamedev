@@ -52,6 +52,7 @@ void Engine::handleGlobalInput(const SDL_Event& event, const bool* keyboardState
 
 void Engine::update(float deltaTime) {
     // std::cout << "Player Updating" << std::endl;
+    player.update(deltaTime);
     if (!player.isAlive()) {
         // waiting to respawn
         if (lives >= 0) { 
@@ -61,8 +62,6 @@ void Engine::update(float deltaTime) {
             }
         }
     } else {
-        // normal gameplay updates
-        player.update(deltaTime);
         collisionCheck();
     }
     for (auto& asteroid : asteroids) {

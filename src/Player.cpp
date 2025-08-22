@@ -40,59 +40,56 @@ void Player::handleInput(const bool* keystates) {
 }
 
 void Player::update(float deltaTime) {
-    if (alive) {
-         if (invincible) {
-            invincibilityTimer -= deltaTime;
-            if (invincibilityTimer <= 0.0f) {
-                invincible = false;
-            }
+    if (!alive) {
+        thrusterSound.stop();
+        return; // Bail early
+    }
+    if (invincible) {
+        invincibilityTimer -= deltaTime;
+        if (invincibilityTimer <= 0.0f) {
+            invincible = false;
         }
-        if (rotatingLeft) {
-            angle -= rotationSpeed * deltaTime;
-            // TODO - set to 0 past 360
-             if (angle < 0.0f) angle = 360;
-        }
-        if (rotatingRight) {
-            angle += rotationSpeed * deltaTime;
-            // TODO - set to 360 when past 0
-            if (angle > 360.0f) angle = 0;
-        }
+    }
+    if (rotatingLeft) {
+        angle -= rotationSpeed * deltaTime;
+        // TODO - set to 0 past 360
+            if (angle < 0.0f) angle = 360;
+    }
+    if (rotatingRight) {
+        angle += rotationSpeed * deltaTime;
+        // TODO - set to 360 when past 0
+        if (angle > 360.0f) angle = 0;
+    }
 
-        float radians = static_cast<float>(DEG2RAD(angle));
-        Vector2 direction = Vector2(std::cos(radians), std::sin(radians));
+    float radians = static_cast<float>(DEG2RAD(angle));
+    Vector2 direction = Vector2(std::cos(radians), std::sin(radians));
 
-        if (thrusting) {
-            velocity += direction * thrust * deltaTime;
-        }
-        if (braking) {
-            velocity -= direction * thrust * deltaTime;
-        }
+    if (thrusting) {
+        velocity += direction * thrust * deltaTime;
+    }
+    if (braking) {
+        velocity -= direction * thrust * deltaTime;
+    }
 
-        position += velocity * deltaTime;
+    position += velocity * deltaTime;
 
-        float halfW = size.x / 2.0f;
-        float halfH = size.y / 2.0f;
+    float halfW = size.x / 2.0f;
+    float halfH = size.y / 2.0f;
 
-        // Screen wrap
-        if (position.x < -halfW) position.x = SCREEN_WIDTH + halfW;
-        if (position.x > SCREEN_WIDTH + halfW) position.x = -halfW;
-        if (position.y < -halfH) position.y = SCREEN_HEIGHT + halfH;
-        if (position.y > SCREEN_HEIGHT + halfH) position.y = -halfH;
+    // Screen wrap
+    if (position.x < -halfW) position.x = SCREEN_WIDTH + halfW;
+    if (position.x > SCREEN_WIDTH + halfW) position.x = -halfW;
+    if (position.y < -halfH) position.y = SCREEN_HEIGHT + halfH;
+    if (position.y > SCREEN_HEIGHT + halfH) position.y = -halfH;
 
-        // Friction
-        velocity -= velocity * friction * deltaTime;
+    // Friction
+    velocity -= velocity * friction * deltaTime;
 
-        // Thruster audio
-        if (thrusting) {
-            thrusterSound.play();
-            thrusterSound.updateForLooping();
-        } else {
-            thrusterSound.stop();
-        }
+    // Thruster audio
+    if (thrusting) {
+        thrusterSound.play();
+        thrusterSound.updateForLooping();
     } else {
-        // move player off screen immediately
-        position.y = SCREEN_HEIGHT * 2;
-        position.x = SCREEN_HEIGHT * 2;
         thrusterSound.stop();
     }
 }

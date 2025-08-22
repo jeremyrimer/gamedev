@@ -1,6 +1,7 @@
 #include "Audio.h"
 #include <iostream>
 #include <cstring>
+#include <vector>
 
 Audio::Audio(const std::string& filePath)  {
     loadWAV(filePath);
@@ -79,10 +80,17 @@ void Audio::play() {
 
 void Audio::stop() {
     if (!playing) return;
-    SDL_PauseAudioDevice(device);
+
     if (stream) {
         SDL_ClearAudioStream(stream);
+        SDL_FlushAudioStream(stream);
+
+        // Push silence to instantly kill sound
+        std::vector<Uint8> silence(bufferLen, 0);
+        SDL_PutAudioStreamData(stream, silence.data(), bufferLen);
     }
+
+    SDL_PauseAudioDevice(device);
     playing = false;
 }
 
