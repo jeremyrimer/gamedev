@@ -123,7 +123,7 @@ bool Engine::circleRectangleCollision(const Vector2& circleCenter, float circleR
 }
 
 void Engine::collisionCheck() {
-    if (!player.isAlive()) return;
+    if (!player.isAlive() || player.isInvincible()) return;
 
     Vector2 playerTopLeft = player.getPosition() - player.getSize() * 0.5f;
 

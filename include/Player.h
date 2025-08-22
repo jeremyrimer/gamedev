@@ -19,7 +19,9 @@ public:
 
     void setAlive(bool liveOrDead);
     bool isAlive() const;
+    bool isInvincible() const;
     void respawn(Vector2 pos);
+
 
 private:
     SDL_Renderer* renderer;
