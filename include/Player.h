@@ -19,6 +19,7 @@ public:
 
     void setAlive(bool liveOrDead);
     bool isAlive() const;
+    void respawn(Vector2 pos);
 
 private:
     SDL_Renderer* renderer;
@@ -39,6 +40,8 @@ private:
     bool thrusting = false;
     bool braking = false;
     bool alive = true;
+    bool invincible = false;
+    float invincibilityTimer;
 
     Audio thrusterSound;
 

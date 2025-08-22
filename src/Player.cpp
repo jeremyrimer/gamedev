@@ -16,7 +16,9 @@ Player::Player(SDL_Renderer* renderer)
       rotationSpeed(PLAYER_STARTING_ROTATION_SPEED),
       thrust(PLAYER_THRUST),
       friction(PLAYER_FRICTION),
-      thrusterSound("assets/sound/thrusters.wav") {
+      thrusterSound("assets/sound/thrusters.wav"),
+      invincibilityTimer(0.0f),
+      invincible(false) {
     
     SDL_Surface* surface = IMG_Load("assets/images/player-ship.png");
     texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -39,6 +41,12 @@ void Player::handleInput(const bool* keystates) {
 
 void Player::update(float deltaTime) {
     if (alive) {
+         if (invincible) {
+            invincibilityTimer -= deltaTime;
+            if (invincibilityTimer <= 0.0f) {
+                invincible = false;
+            }
+        }
         if (rotatingLeft) {
             angle -= rotationSpeed * deltaTime;
             // TODO - set to 0 past 360
@@ -82,12 +90,21 @@ void Player::update(float deltaTime) {
             thrusterSound.stop();
         }
     } else {
+        // move player off screen immediately
+        position.y = SCREEN_HEIGHT * 2;
+        position.x = SCREEN_HEIGHT * 2;
         thrusterSound.stop();
     }
 }
 
 void Player::render() {
     if (!alive) return;
+
+    // If invincible, flicker every ~0.2s
+    if (invincible) {
+        int flicker = static_cast<int>(invincibilityTimer * 10) % 2;
+        if (flicker == 0) return; // skip draw this frame
+    }
 
     SDL_FRect dest;
     dest.w = size.x;
@@ -129,6 +146,15 @@ void Player::renderThruster() {
 
         SDL_RenderGeometry(renderer, nullptr, verts, 3, nullptr, 0);
     }
+}
+
+void Player::respawn(Vector2 pos) {
+    position = pos;
+    velocity = {0, 0};
+    angle = PLAYER_STARTING_ANGLE;
+    alive = true;
+    invincible = true;
+    invincibilityTimer = 3.0f; // 3 seconds of safety
 }
 
 Vector2 Player::getPosition() const {

@@ -7,6 +7,7 @@
 #include "Asteroid.h"
 #include "DebugHUD.h"
 #include "Explosion.h"
+#include "Constants.h"
 
 enum class GameState {
     PLAYING,
@@ -28,16 +29,19 @@ public:
 private:
     SDL_Renderer* renderer;
     Text gameOverFont;
-
+    DebugHUD debugHUD;
+    
     Player player;
     std::vector<Asteroid> asteroids;
     std::vector<std::unique_ptr<Explosion>> explosions;
-    DebugHUD debugHUD;
-
+    int lives;
+    float respawnTimer;
     GameState gameState = GameState::PLAYING;
 
     void collisionCheck();
     bool circleRectangleCollision(const Vector2& circleCenter, float circleRadius,
                                   const Vector2& rectTopLeft, float rectWidth, float rectHeight);
     void handlePlayerDeath();
+    void initGame();
+    void respawnPlayer();
 };

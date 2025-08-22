@@ -11,7 +11,9 @@ Engine::Engine(SDL_Renderer* renderer)
     : renderer(renderer),
       player(renderer),
       debugHUD(renderer, &player),
-      gameOverFont(Text(renderer, "assets/fonts/jb.ttf", 94)) {}
+      gameOverFont(Text(renderer, "assets/fonts/jb.ttf", 94)),
+      lives(PLAYER_STARTING_LIVES),
+      respawnTimer(0.0f)  {}
 
 // Destructor
 Engine::~Engine() {
@@ -19,13 +21,16 @@ Engine::~Engine() {
 }
 
 void Engine::init() {
+    Explosion::LoadTexture(renderer);
+    initGame();
+}
+
+void Engine::initGame() {
     asteroids.clear();
 
     for (int i = 0; i < 10; ++i) {
         asteroids.emplace_back(renderer, player.getPosition());
     }
-
-    Explosion::LoadTexture(renderer);
 
     gameState = GameState::PLAYING;
 }
@@ -47,9 +52,19 @@ void Engine::handleGlobalInput(const SDL_Event& event, const bool* keyboardState
 
 void Engine::update(float deltaTime) {
     // std::cout << "Player Updating" << std::endl;
-    player.update(deltaTime);
-
-    collisionCheck();
+    if (!player.isAlive()) {
+        // waiting to respawn
+        if (lives >= 0) { 
+            respawnTimer -= deltaTime;
+            if (respawnTimer <= 0.0f) {
+                respawnPlayer();
+            }
+        }
+    } else {
+        // normal gameplay updates
+        player.update(deltaTime);
+        collisionCheck();
+    }
     for (auto& asteroid : asteroids) {
         asteroid.update(deltaTime);
     }
@@ -71,10 +86,12 @@ void Engine::render() {
     for (const auto& asteroid : asteroids) {
         asteroid.render();
     }
+
     // std::cout << "After asteroids render" << std::endl;
     for (const auto& explosion : explosions) {
         explosion->draw();
     }
+
     // std::cout << "After explosions render" << std::endl;
     for (auto it = explosions.begin(); it != explosions.end(); ) {
         if ((*it)->isFinished()) {
@@ -83,8 +100,8 @@ void Engine::render() {
             ++it;
         }
     }
-    // std::cout << "After explosions removal" << std::endl;
 
+    // std::cout << "After explosions removal" << std::endl;
     debugHUD.render();
 
     if (gameState == GameState::GAMEOVER) {
@@ -154,7 +171,17 @@ void Engine::handlePlayerDeath() {
                 0.3f
             )
         );
+        lives -= 1;
+        std::cout << "Remaining lives: " << lives << std::endl;
+
+        if (lives < 0) {
+            gameState = GameState::GAMEOVER;
+        } else {
+            respawnTimer = RESPAWN_DELAY;
+        }
     }
-    
-    gameState = GameState::GAMEOVER;
+}
+
+void Engine::respawnPlayer() {
+    player.respawn({SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f});
 }
