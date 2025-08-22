@@ -172,3 +172,7 @@ void Player::setAlive(bool liveOrDead) {
 bool Player::isAlive() const {
     return alive;
 }
+
+bool Player::isInvincible() const {
+    return invincible;
+}
