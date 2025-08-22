@@ -20,7 +20,7 @@ public:
     void setAlive(bool liveOrDead);
     bool isAlive() const;
     bool isInvincible() const;
-    void respawn(Vector2 pos);
+    void respawn(Vector2 pos, bool startInvincible);
 
 
 private:

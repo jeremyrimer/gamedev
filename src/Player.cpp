@@ -145,13 +145,15 @@ void Player::renderThruster() {
     }
 }
 
-void Player::respawn(Vector2 pos) {
+void Player::respawn(Vector2 pos, bool startInvincible) {
     position = pos;
     velocity = {0, 0};
     angle = PLAYER_STARTING_ANGLE;
     alive = true;
-    invincible = true;
-    invincibilityTimer = 3.0f; // 3 seconds of safety
+    invincible = startInvincible;
+    if (startInvincible) {
+        invincibilityTimer = 3.0f; 
+    }
 }
 
 Vector2 Player::getPosition() const {

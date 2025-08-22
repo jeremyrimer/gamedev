@@ -32,6 +32,8 @@ void Engine::initGame() {
         asteroids.emplace_back(renderer, player.getPosition());
     }
 
+    player.respawn({SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f}, false);
+
     gameState = GameState::PLAYING;
 }
 
@@ -42,6 +44,13 @@ void Engine::handleGlobalInput(const SDL_Event& event, const bool* keyboardState
             SDL_Event quitEvent;
             quitEvent.type = SDL_EVENT_QUIT;
             SDL_PushEvent(&quitEvent);
+        }
+        else if (gameState == GameState::GAMEOVER) {
+                if (event.key.key == SDLK_SPACE) {   // Press R to restart
+                initGame();
+                lives = PLAYER_STARTING_LIVES;
+                respawnTimer = 0.0f;
+            }
         }
         else if (gameState == GameState::PLAYING) {
             player.handleInput(keyboardState);
@@ -58,7 +67,7 @@ void Engine::update(float deltaTime) {
         if (lives >= 0) { 
             respawnTimer -= deltaTime;
             if (respawnTimer <= 0.0f) {
-                respawnPlayer();
+                player.respawn({SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f}, true);
             }
         }
     } else {
@@ -179,8 +188,4 @@ void Engine::handlePlayerDeath() {
             respawnTimer = RESPAWN_DELAY;
         }
     }
-}
-
-void Engine::respawnPlayer() {
-    player.respawn({SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f});
 }

@@ -43,5 +43,4 @@ private:
                                   const Vector2& rectTopLeft, float rectWidth, float rectHeight);
     void handlePlayerDeath();
     void initGame();
-    void respawnPlayer();
 };
