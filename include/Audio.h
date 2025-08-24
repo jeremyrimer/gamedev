@@ -12,6 +12,7 @@ public:
     ~Audio();
 
     void play();
+    void playNow();
     void stop();
     void setLoop(bool loop);
     void setVolume(float volume); // 0.0 to 1.0

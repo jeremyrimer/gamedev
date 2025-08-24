@@ -42,6 +42,7 @@ private:
     bool firing = false;
     bool wasFiringLastTick = false;
     GameState gameState = GameState::PLAYING;
+    Audio bulletSound;
 
     void collisionCheck();
     bool circleRectangleCollision(const Vector2& circleCenter, float circleRadius,

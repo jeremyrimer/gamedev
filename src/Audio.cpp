@@ -109,3 +109,12 @@ void Audio::updateForLooping() {
         }
     }
 }
+
+void Audio::playNow() {
+    if (!stream || !buffer) return;
+
+    SDL_ClearAudioStream(stream);
+    SDL_FlushAudioStream(stream);
+    playing = false; // allow play() to work again
+    play();          // call your existing play
+}

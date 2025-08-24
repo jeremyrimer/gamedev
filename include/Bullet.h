@@ -2,6 +2,7 @@
 #include <SDL3/SDL.h>
 #include "Vector2.h"
 #include "Constants.h"
+#include "Audio.h"
 
 class Bullet {
 public:

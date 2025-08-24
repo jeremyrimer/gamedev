@@ -14,8 +14,8 @@ Source: "dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createal
 Source: "assets\images\human_aimbot_profile_pic.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\Pixel Engine"; Filename: "{app}\HumanAimbot.exe"; IconFilename: "{app}\human_aimbot_profile_pic.ico"
-Name: "{group}\Uninstall Pixel Engine"; Filename: "{uninstallexe}"
+Name: "{group}\Human Aimbot"; Filename: "{app}\HumanAimbot.exe"; IconFilename: "{app}\human_aimbot_profile_pic.ico"
+Name: "{group}\Uninstall Human Aimbot"; Filename: "{uninstallexe}"
 
 [Run]
-Filename: "{app}\HumanAimbot.exe"; Description: "Launch Pixel Engine"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\HumanAimbot.exe"; Description: "Launch Human Aimbot"; Flags: nowait postinstall skipifsilent

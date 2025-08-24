@@ -4,6 +4,7 @@
 #include "DebugHUD.h"
 #include "Text.h"
 #include <iostream>
+#include "Audio.h"
 
 
 // Constructor
@@ -13,7 +14,10 @@ Engine::Engine(SDL_Renderer* renderer)
       debugHUD(renderer, &player),
       gameOverFont(Text(renderer, "assets/fonts/jb.ttf", 94)),
       lives(PLAYER_STARTING_LIVES),
-      respawnTimer(0.0f)  {}
+      respawnTimer(0.0f),
+      bulletSound(Audio("assets/sound/blaster.wav"))  {
+        bulletSound.setVolume(0.2f);
+      }
 
 // Destructor
 Engine::~Engine() {
@@ -261,6 +265,7 @@ void Engine::handlePlayerDeath() {
 
 void Engine::fireBullet() {
     bullets.emplace_back(player.getPosition(), player.getAngle());
+    bulletSound.playNow();
     firing = false;
 }
 
