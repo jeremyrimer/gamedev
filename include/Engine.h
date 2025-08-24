@@ -45,7 +45,9 @@ private:
 
     void collisionCheck();
     bool circleRectangleCollision(const Vector2& circleCenter, float circleRadius,
-                                  const Vector2& rectTopLeft, float rectWidth, float rectHeight);
+                                  const Vector2& rectTopLeft, float rectWidth, float rectHeight) const;
+    bool circleCircleCollision(const Vector2& aPos, float aRadius,
+                               const Vector2& bPos, float bRadius) const;                             
     void handlePlayerDeath();
     void initGame();
     void fireBullet();

@@ -19,3 +19,4 @@ constexpr int   PLAYER_STARTING_LIVES = 2;
 constexpr float RESPAWN_DELAY = 3.0f; // seconds
 constexpr float BULLET_SPEED = 600.0f;
 constexpr float BULLET_LIFE_SPAN = 1.0f; // seconds
+constexpr float BULLET_RADIUS = 2.0f;

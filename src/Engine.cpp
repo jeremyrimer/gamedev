@@ -97,6 +97,44 @@ void Engine::update(float deltaTime) {
     for (auto& explosion : explosions) {
         explosion->update(deltaTime);
     }
+    for (auto bulletIt = bullets.begin(); bulletIt != bullets.end(); ) {
+        bool bulletDestroyed = false;
+
+        for (size_t i = 0; i < asteroids.size(); ++i) {
+            if (circleCircleCollision(bulletIt->getPosition(), bulletIt->getRadius(),
+                                    asteroids[i].getPosition(), asteroids[i].getRadius())) {
+
+                // Spawn explosion
+                explosions.emplace_back(
+                    std::make_unique<Explosion>(
+                        renderer,
+                        asteroids[i].getPosition(),
+                        asteroids[i].getRadius() * 2.0f,
+                        0.1f,
+                        "assets/sound/spaceship-explosion.wav",
+                        0.1f
+                    )
+                );
+
+                // Split asteroid into smaller pieces if needed
+                std::vector<Asteroid> newPieces = asteroids[i].split(renderer);
+                asteroids.erase(asteroids.begin() + i); // remove hit asteroid
+                if (!newPieces.empty()) {
+                    asteroids.insert(asteroids.end(), newPieces.begin(), newPieces.end());
+                }
+
+                bulletDestroyed = true;
+                break; // stop checking other asteroids for this bullet
+            }
+        }
+
+        if (bulletDestroyed) {
+            bulletIt = bullets.erase(bulletIt);
+        } else {
+            ++bulletIt;
+        }
+    }
+
     debugHUD.update(deltaTime);
 }
 
@@ -142,7 +180,7 @@ void Engine::render() {
 }
 
 bool Engine::circleRectangleCollision(const Vector2& circleCenter, float circleRadius,
-                                      const Vector2& rectTopLeft, float rectWidth, float rectHeight) {
+                                      const Vector2& rectTopLeft, float rectWidth, float rectHeight) const {
     float closestX = SDL_clamp(circleCenter.x, rectTopLeft.x, rectTopLeft.x + rectWidth);
     float closestY = SDL_clamp(circleCenter.y, rectTopLeft.y, rectTopLeft.y + rectHeight);
 
@@ -150,6 +188,15 @@ bool Engine::circleRectangleCollision(const Vector2& circleCenter, float circleR
     float dy = circleCenter.y - closestY;
 
     return (dx * dx + dy * dy) < (circleRadius * circleRadius);
+}
+
+bool Engine::circleCircleCollision(const Vector2& aPos, float aRadius,
+                                   const Vector2& bPos, float bRadius) const {
+    float dx = aPos.x - bPos.x;
+    float dy = aPos.y - bPos.y;
+    float distanceSq = dx * dx + dy * dy;
+    float radiusSum = aRadius + bRadius;
+    return distanceSq < (radiusSum * radiusSum);
 }
 
 void Engine::collisionCheck() {
