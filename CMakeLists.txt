@@ -8,6 +8,7 @@ set(SDL3_ROOT "C:/programming/libs/SDL3-3.2.16/x86_64-w64-mingw32")
 set(SDL3_IMAGE_ROOT "C:/programming/libs/SDL_image")
 set(SDL3_TTF_ROOT "C:/programming/libs/SDL_ttf")
 set(INSTALL_DIR "C:/programming/libs/install")
+set(BACKWARD_DIR "C:/programming/libs/backward-cpp")
 
 # Add include and lib paths
 link_directories(${SDL3_ROOT}/lib)
@@ -25,10 +26,17 @@ target_include_directories(HumanAimbot PRIVATE
   "${PROJECT_SOURCE_DIR}/include"
   "${INSTALL_DIR}/include"
   "${INSTALL_DIR}/include/freetype2"
+  "${BACKWARD_DIR}"
 )
 
 # Link to SDL3
-target_link_libraries(HumanAimbot PRIVATE SDL3 "${SDL3_IMAGE_ROOT}/build/libSDL3_image.dll.a" SDL3_ttf freetype)
+target_link_libraries(HumanAimbot PRIVATE 
+  SDL3 
+  "${SDL3_IMAGE_ROOT}/build/libSDL3_image.dll.a"
+  SDL3_ttf 
+  freetype
+  DbgHelp
+)
 
 # Copy DLL to build output
 add_custom_command(TARGET HumanAimbot POST_BUILD

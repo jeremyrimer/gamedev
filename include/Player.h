@@ -21,7 +21,7 @@ public:
     bool isAlive() const;
     bool isInvincible() const;
     void respawn(Vector2 pos, bool startInvincible);
-
+    void shutdown(); 
 
 private:
     SDL_Renderer* renderer;
@@ -44,6 +44,7 @@ private:
     bool alive = true;
     bool invincible = false;
     float invincibilityTimer;
+    bool shuttingDown = false;
 
     Audio thrusterSound;
 

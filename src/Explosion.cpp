@@ -71,3 +71,7 @@ void Explosion::draw() {
 bool Explosion::isFinished() {
     return finished && !explosionSound.isPlaying();
 }
+
+void Explosion::shutdown() {
+    explosionSound.stop();
+}

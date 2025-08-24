@@ -23,6 +23,7 @@ public:
     void handleGlobalInput(const SDL_Event& event, const bool* keyboardState);
     void update(float deltaTime);
     void render();
+    void shutdown();
 
     static SDL_Texture* texture; // Shared by all explosions
 

@@ -46,7 +46,7 @@ void Engine::handleGlobalInput(const SDL_Event& event, const bool* keyboardState
             SDL_PushEvent(&quitEvent);
         }
         else if (gameState == GameState::GAMEOVER) {
-                if (event.key.key == SDLK_SPACE) {   // Press R to restart
+                if (event.key.key == SDLK_SPACE) {  
                 initGame();
                 lives = PLAYER_STARTING_LIVES;
                 respawnTimer = 0.0f;
@@ -188,4 +188,19 @@ void Engine::handlePlayerDeath() {
             respawnTimer = RESPAWN_DELAY;
         }
     }
+}
+
+void Engine::shutdown() {
+    player.shutdown();
+
+    for (auto& explosion : explosions) {
+        explosion->shutdown(); // you may need to add this method in Explosion
+    }
+    explosions.clear();
+
+    // Clear asteroids
+    asteroids.clear();
+
+    // Unload any static textures
+    Explosion::UnloadTexture();
 }

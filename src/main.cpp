@@ -6,6 +6,11 @@
 #include "Engine.h"
 #include "Constants.h"
 
+#include "backward.hpp"
+namespace backward {
+    backward::SignalHandling sh;  // This installs signal handlers
+}
+
 // Forward declarations
 bool init(SDL_Window*& window, SDL_Renderer*& renderer); // method that starts up all subsystems
 void handleEvents(bool& running, const bool* keyboardState, Engine* engine); // SDL events are fired throughout operation, this routes them
@@ -19,28 +24,31 @@ int main(int argc, char* argv[]) {
     SDL_Renderer* renderer = nullptr;
 
     if (!init(window, renderer)) return 1; 
-    Engine engine = Engine(renderer);
-    engine.init();
+    {
+        Engine engine = Engine(renderer);
+        engine.init();
 
-    Uint64 prevCounter = SDL_GetPerformanceCounter();
-    double freq = (double)SDL_GetPerformanceFrequency();
-    bool running = true;
+        Uint64 prevCounter = SDL_GetPerformanceCounter();
+        double freq = (double)SDL_GetPerformanceFrequency();
+        bool running = true;
 
-    while (running) {
-        // Server Tick
-        // std::cout << "TICK" << std::endl;
-        Uint64 now = SDL_GetPerformanceCounter();
-        float deltaTime = static_cast<float>((now - prevCounter) / freq);
+        while (running) {
+            // Server Tick
+            // std::cout << "TICK" << std::endl;
+            const bool* keyboardState = SDL_GetKeyboardState(NULL);
+            handleEvents(running, keyboardState, &engine);
 
-        const bool* keyboardState = SDL_GetKeyboardState(NULL);
-
-        handleEvents(running, keyboardState, &engine);
-        engine.update(deltaTime);
-        engine.render();
-        SDL_Delay(1);      // This just stops the app from pinning 100% CPU usage
-        prevCounter = now;
+            Uint64 now = SDL_GetPerformanceCounter();
+            float deltaTime = static_cast<float>((now - prevCounter) / freq);
+            
+            if (!running) break;
+            engine.update(deltaTime);
+            engine.render();
+            SDL_Delay(1);      // This just stops the app from pinning 100% CPU usage
+            prevCounter = now;
+        }
+        engine.shutdown();
     }
-
     shutdown(window, renderer);
     std::cout << "Human Aimbot Shutdown" << std::endl;
     return 0;
@@ -98,6 +106,7 @@ void handleEvents(bool& running, const bool* keyboardState, Engine* engine) {
     // std::cout << "Checking Events" << std::endl; 
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_EVENT_QUIT) {
+            std::cout << "Quit Detected" << std::endl;
             running = false;
         } else {
             engine->handleGlobalInput(event, keyboardState); // from Engine.cpp
@@ -106,6 +115,7 @@ void handleEvents(bool& running, const bool* keyboardState, Engine* engine) {
 }
 
 void shutdown(SDL_Window* window, SDL_Renderer* renderer) {
+    TTF_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

@@ -18,7 +18,8 @@ Player::Player(SDL_Renderer* renderer)
       friction(PLAYER_FRICTION),
       thrusterSound("assets/sound/thrusters.wav"),
       invincibilityTimer(0.0f),
-      invincible(false) {
+      invincible(false),
+      shuttingDown(false) {
     
     SDL_Surface* surface = IMG_Load("assets/images/player-ship.png");
     texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -40,6 +41,8 @@ void Player::handleInput(const bool* keystates) {
 }
 
 void Player::update(float deltaTime) {
+    if (shuttingDown) return;
+
     if (!alive) {
         thrusterSound.stop();
         return; // Bail early
@@ -95,7 +98,7 @@ void Player::update(float deltaTime) {
 }
 
 void Player::render() {
-    if (!alive) return;
+    if (shuttingDown || !alive) return;
 
     // If invincible, flicker every ~0.2s
     if (invincible) {
@@ -174,4 +177,11 @@ bool Player::isAlive() const {
 
 bool Player::isInvincible() const {
     return invincible;
+}
+
+void Player::shutdown() {
+    shuttingDown = true;
+    thrusterSound.stop();
+    SDL_DestroyTexture(texture);
+    SDL_Delay(10);
 }
