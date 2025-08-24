@@ -1,13 +1,9 @@
-#define _USE_MATH_DEFINES
 #include "Player.h"
 #include "Constants.h"
 #include "Vector2.h"
 #include <SDL3_image/SDL_image.h>
 #include <iostream>
 #include <cmath>
-
-#define _USE_MATH_DEFINES
-#define DEG2RAD(angleDegrees) (((angleDegrees) - 90.0f) * M_PI / 180.0f)
 
 Player::Player(SDL_Renderer* renderer)
     : renderer(renderer),

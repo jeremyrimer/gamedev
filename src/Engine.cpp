@@ -53,6 +53,13 @@ void Engine::handleGlobalInput(const SDL_Event& event, const bool* keyboardState
             }
         }
         else if (gameState == GameState::PLAYING) {
+            if (event.type == SDL_EVENT_KEY_DOWN && 
+                event.key.key == SDLK_SPACE && 
+                bullets.size() < 3 &&
+                player.isAlive()
+            ) {
+                firing = true;
+            }
             player.handleInput(keyboardState);
         }
         debugHUD.handleInput(keyboardState);
@@ -62,6 +69,9 @@ void Engine::handleGlobalInput(const SDL_Event& event, const bool* keyboardState
 void Engine::update(float deltaTime) {
     // std::cout << "Player Updating" << std::endl;
     player.update(deltaTime);
+    if (firing && bullets.size() < 3) {
+        fireBullet();
+    }
     if (!player.isAlive()) {
         // waiting to respawn
         if (lives >= 0) { 
@@ -72,6 +82,14 @@ void Engine::update(float deltaTime) {
         }
     } else {
         collisionCheck();
+    }
+    for (auto it = bullets.begin(); it != bullets.end();) {
+        it->update(deltaTime);
+        if (!it->isAlive()) {
+            it = bullets.erase(it);
+        } else {
+            ++it;
+        }
     }
     for (auto& asteroid : asteroids) {
         asteroid.update(deltaTime);
@@ -90,6 +108,10 @@ void Engine::render() {
 
     player.render();
     // std::cout << "After Player Render" << std::endl;
+
+    for (auto& bullet : bullets) {
+        bullet.render(renderer);
+    }
 
     for (const auto& asteroid : asteroids) {
         asteroid.render();
@@ -188,6 +210,11 @@ void Engine::handlePlayerDeath() {
             respawnTimer = RESPAWN_DELAY;
         }
     }
+}
+
+void Engine::fireBullet() {
+    bullets.emplace_back(player.getPosition(), player.getAngle());
+    firing = false;
 }
 
 void Engine::shutdown() {

@@ -8,6 +8,7 @@
 #include "DebugHUD.h"
 #include "Explosion.h"
 #include "Constants.h"
+#include "Bullet.h"
 
 enum class GameState {
     PLAYING,
@@ -35,8 +36,11 @@ private:
     Player player;
     std::vector<Asteroid> asteroids;
     std::vector<std::unique_ptr<Explosion>> explosions;
+    std::vector<Bullet> bullets;
     int lives;
     float respawnTimer;
+    bool firing = false;
+    bool wasFiringLastTick = false;
     GameState gameState = GameState::PLAYING;
 
     void collisionCheck();
@@ -44,4 +48,5 @@ private:
                                   const Vector2& rectTopLeft, float rectWidth, float rectHeight);
     void handlePlayerDeath();
     void initGame();
+    void fireBullet();
 };
