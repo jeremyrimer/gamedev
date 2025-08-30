@@ -180,4 +180,6 @@ std::vector<Vector2> Asteroid::generateJaggedPoints(int numPoints) const {
 
 Vector2 Asteroid::getPosition() const { return position; }
 int Asteroid::getRadius() const { return radius; }
+Vector2 Asteroid::getVelocity() const { return velocity; }
+void Asteroid::setVelocity(Vector2 newVelocity) { velocity = newVelocity; };
 AsteroidSize Asteroid::getSize() const { return size; }

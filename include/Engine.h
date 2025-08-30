@@ -45,12 +45,14 @@ private:
     std::vector<Bullet> bullets;
     int lives;
     int score = 0;
+    int round = 1;
     float respawnTimer;
     bool firing = false;
     bool wasFiringLastTick = false;
     GameState gameState = GameState::LOADING;
     Audio bulletSound;
 
+    void spawnAsteroidsForRound();
     void collisionCheck();
     bool circleRectangleCollision(const Vector2& circleCenter, float circleRadius,
                                   const Vector2& rectTopLeft, float rectWidth, float rectHeight) const;

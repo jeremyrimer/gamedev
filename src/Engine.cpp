@@ -20,6 +20,7 @@ Engine::Engine(SDL_Renderer* renderer)
       scoreFont(Text(renderer, "assets/fonts/jb.ttf", 16)),
       lives(PLAYER_STARTING_LIVES),
       respawnTimer(0.0f),
+      round(1),
       bulletSound(Audio("assets/sound/blaster.wav"))  {
         bulletSound.setVolume(0.2f);
 
@@ -45,9 +46,7 @@ void Engine::init() {
 void Engine::initGame() {
     asteroids.clear();
 
-    for (int i = 0; i < 10; ++i) {
-        asteroids.emplace_back(renderer, player.getPosition());
-    }
+    spawnAsteroidsForRound();
 
     score = 0;
     lives = PLAYER_STARTING_LIVES;
@@ -171,6 +170,7 @@ void Engine::update(float deltaTime) {
 }
 
 void Engine::renderScore() const {
+    scoreFont.display("LEVEL: " + std::to_string(round), 200, 10, 255, 255, 255, 255);
     scoreFont.display(std::to_string(score), SCREEN_WIDTH - 200, 10, 255, 255, 255, 255);
 }
 
@@ -188,7 +188,7 @@ void Engine::render() {
         SDL_RenderTexture(renderer, avatarTexture, nullptr, &destRect);
         loadingFont.display("Press [SPACE] to Start", SCREEN_WIDTH / 2.75f, SCREEN_HEIGHT / 1.7f, 255, 255, 255, 255);
         titleFont.display("HuMaN AiMbOt", SCREEN_WIDTH / 13.0f, SCREEN_HEIGHT / 3.0f, 0, 255, 0, 255);
-        instructionsFont.display("Arrow Keys Move          Space Fires.", SCREEN_WIDTH / 3.1f, SCREEN_HEIGHT / 1.1f, 255, 255, 255, 255);
+        instructionsFont.display("Arrow Keys to Move          Space to Fire", SCREEN_WIDTH / 3.3f, SCREEN_HEIGHT / 1.1f, 255, 255, 255, 255);
     } else {
         renderScore();
         if (gameState == GameState::PLAYING) {
@@ -222,6 +222,11 @@ void Engine::render() {
 
         if (gameState == GameState::GAMEOVER) {
             gameOverFont.display("GAME OVER", SCREEN_WIDTH / 4.0f, SCREEN_HEIGHT / 3.0f, 255, 0, 0, 255);
+        }
+
+        if (gameState == GameState::PLAYING && asteroids.empty()) {
+            round++;                      // increment round
+            spawnAsteroidsForRound();     // spawn next round
         }
     }
 
@@ -312,6 +317,18 @@ void Engine::fireBullet() {
     bullets.emplace_back(player.getPosition(), player.getAngle());
     bulletSound.playNow();
     firing = false;
+}
+
+void Engine::spawnAsteroidsForRound() {
+    int baseCount = 3;
+    int asteroidCount = baseCount + round * 2; // more asteroids each round
+
+    asteroids.clear();
+    for (int i = 0; i < asteroidCount; ++i) {
+        Asteroid a(renderer, player.getPosition());
+        a.setVelocity(a.getVelocity() * (1.0f + round * 0.1f));
+        asteroids.push_back(a);
+    }
 }
 
 void Engine::shutdown() {
