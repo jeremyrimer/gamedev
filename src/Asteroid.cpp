@@ -74,7 +74,13 @@ std::vector<Asteroid> Asteroid::split(SDL_Renderer* newRenderer) {
 
     AsteroidSize newSize = static_cast<AsteroidSize>(static_cast<int>(size) - 1);
 
-    for (int i = 0; i < 2 + rand() % 2; ++i) {
+    int newCount;
+    switch (size) {
+        case AsteroidSize::LARGE:  newCount = 3; break;
+        case AsteroidSize::MEDIUM: newCount = 2; break;
+    }
+
+    for (int i = 0; i < newCount; ++i) {
         float angle = static_cast<float>(rand() % 360) * (M_PI / 180.0f);
         float speed = 50.0f + rand() % 50;
         Vector2 newVel(std::cos(angle) * speed, std::sin(angle) * speed);
