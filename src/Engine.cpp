@@ -222,6 +222,7 @@ void Engine::render() {
 
         if (gameState == GameState::GAMEOVER) {
             gameOverFont.display("GAME OVER", SCREEN_WIDTH / 4.0f, SCREEN_HEIGHT / 3.0f, 255, 0, 0, 255);
+            instructionsFont.display("Press [SPACE] to Play Again", SCREEN_WIDTH / 2.7f, SCREEN_HEIGHT / 2.0f, 255, 255, 255, 255);
         }
 
         if (gameState == GameState::PLAYING && asteroids.empty()) {
