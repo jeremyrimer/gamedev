@@ -17,6 +17,7 @@ Engine::Engine(SDL_Renderer* renderer)
       loadingFont(Text(renderer, "assets/fonts/jb.ttf", 22)),
       titleFont(Text(renderer, "assets/fonts/jb.ttf", 130)),
       instructionsFont(Text(renderer, "assets/fonts/jb.ttf", 16)),
+      scoreFont(Text(renderer, "assets/fonts/jb.ttf", 16)),
       lives(PLAYER_STARTING_LIVES),
       respawnTimer(0.0f),
       bulletSound(Audio("assets/sound/blaster.wav"))  {
@@ -48,6 +49,7 @@ void Engine::initGame() {
         asteroids.emplace_back(renderer, player.getPosition());
     }
 
+    score = 0;
     lives = PLAYER_STARTING_LIVES;
     respawnTimer = 0.0f;
     player.respawn({SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f}, false);
@@ -140,6 +142,12 @@ void Engine::update(float deltaTime) {
                     )
                 );
 
+                switch (asteroids[i].getSize()) {
+                    case AsteroidSize::LARGE:  score += LARGE_ASTEROID_SCORE; break;
+                    case AsteroidSize::MEDIUM: score += MEDIUM_ASTEROID_SCORE; break;
+                    case AsteroidSize::SMALL:  score += SMALL_ASTEROID_SCORE; break;
+                }
+
                 // Split asteroid into smaller pieces if needed
                 std::vector<Asteroid> newPieces = asteroids[i].split(renderer);
                 asteroids.erase(asteroids.begin() + i); // remove hit asteroid
@@ -148,6 +156,7 @@ void Engine::update(float deltaTime) {
                 }
 
                 bulletDestroyed = true;
+                
                 break; // stop checking other asteroids for this bullet
             }
         }
@@ -159,6 +168,10 @@ void Engine::update(float deltaTime) {
         }
     }
     debugHUD.update(deltaTime);
+}
+
+void Engine::renderScore() const {
+    scoreFont.display(std::to_string(score), SCREEN_WIDTH - 200, 10, 255, 255, 255, 255);
 }
 
 void Engine::render() {
@@ -177,6 +190,7 @@ void Engine::render() {
         titleFont.display("HuMaN AiMbOt", SCREEN_WIDTH / 13.0f, SCREEN_HEIGHT / 3.0f, 0, 255, 0, 255);
         instructionsFont.display("Arrow Keys Move          Space Fires.", SCREEN_WIDTH / 3.1f, SCREEN_HEIGHT / 1.1f, 255, 255, 255, 255);
     } else {
+        renderScore();
         if (gameState == GameState::PLAYING) {
             player.render();
         }

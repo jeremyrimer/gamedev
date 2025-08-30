@@ -26,6 +26,7 @@ class Asteroid {
         bool isSmallest() const;
         Vector2 getPosition() const;
         int getRadius() const;
+        AsteroidSize getSize() const;
 
         // Split this asteroid into smaller ones
         std::vector<Asteroid> split(SDL_Renderer* newRenderer);

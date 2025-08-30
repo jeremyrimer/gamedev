@@ -20,3 +20,8 @@ constexpr float RESPAWN_DELAY = 3.0f; // seconds
 constexpr float BULLET_SPEED = 600.0f;
 constexpr float BULLET_LIFE_SPAN = 1.0f; // seconds
 constexpr float BULLET_RADIUS = 2.0f;
+
+// Game Settings
+constexpr int LARGE_ASTEROID_SCORE = 100;
+constexpr int MEDIUM_ASTEROID_SCORE = 300;
+constexpr int SMALL_ASTEROID_SCORE = 500;

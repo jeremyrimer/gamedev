@@ -35,6 +35,7 @@ private:
     Text loadingFont;
     Text titleFont;
     Text instructionsFont;
+    Text scoreFont;
     DebugHUD debugHUD;
     SDL_Texture* avatarTexture;
     
@@ -43,6 +44,7 @@ private:
     std::vector<std::unique_ptr<Explosion>> explosions;
     std::vector<Bullet> bullets;
     int lives;
+    int score = 0;
     float respawnTimer;
     bool firing = false;
     bool wasFiringLastTick = false;
@@ -57,4 +59,5 @@ private:
     void handlePlayerDeath();
     void initGame();
     void fireBullet();
+    void renderScore() const;
 };

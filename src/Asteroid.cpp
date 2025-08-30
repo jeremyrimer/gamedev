@@ -99,7 +99,7 @@ void Asteroid::render() const {
     SDL_Color backing = {130, 130, 130, 255}; // outer/backing circle
     SDL_Color main    = {150, 150, 150, 255}; // inner/main circle
     SDL_Color shade   = {180, 180, 180, 255}; // overlay shading
-    SDL_Color crater  = {90, 90, 90, 255};
+    SDL_Color crater  = {140, 140, 140, 255};
 
     // ---- Draw backing circle ----
     for (int w = 0; w < radius*2; w++) {
@@ -180,3 +180,4 @@ std::vector<Vector2> Asteroid::generateJaggedPoints(int numPoints) const {
 
 Vector2 Asteroid::getPosition() const { return position; }
 int Asteroid::getRadius() const { return radius; }
+AsteroidSize Asteroid::getSize() const { return size; }
