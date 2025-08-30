@@ -10,6 +10,11 @@ enum class AsteroidSize {
     SMALL = 1
 };
 
+struct Crater {
+    Vector2 offset;
+    float radius;
+};
+
 static const float SAFE_SPAWN_RADIUS = 300.0f;
 
 class Asteroid {
@@ -35,4 +40,6 @@ class Asteroid {
         AsteroidSize size;
         Vector2 position;
         Vector2 velocity;
+        std::vector<Crater> craters;
+        std::vector<Vector2> generateJaggedPoints(int numPoints) const;
 };

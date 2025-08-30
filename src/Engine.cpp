@@ -5,6 +5,7 @@
 #include "Text.h"
 #include <iostream>
 #include "Audio.h"
+#include <SDL3_image/SDL_image.h>
 
 
 // Constructor
@@ -13,20 +14,31 @@ Engine::Engine(SDL_Renderer* renderer)
       player(renderer),
       debugHUD(renderer, &player),
       gameOverFont(Text(renderer, "assets/fonts/jb.ttf", 94)),
+      loadingFont(Text(renderer, "assets/fonts/jb.ttf", 22)),
+      titleFont(Text(renderer, "assets/fonts/jb.ttf", 130)),
+      instructionsFont(Text(renderer, "assets/fonts/jb.ttf", 16)),
       lives(PLAYER_STARTING_LIVES),
       respawnTimer(0.0f),
       bulletSound(Audio("assets/sound/blaster.wav"))  {
         bulletSound.setVolume(0.2f);
+
+        SDL_Surface* surface = IMG_Load("assets/images/human_aimbot_avatar.png");
+        avatarTexture = SDL_CreateTextureFromSurface(renderer, surface);
+        if (!avatarTexture) {
+            throw std::runtime_error("Failed to load Human Aimbot Avatar image!");
+        }
+        SDL_DestroySurface(surface);
       }
 
 // Destructor
 Engine::~Engine() {
     Explosion::UnloadTexture();
+    SDL_DestroyTexture(avatarTexture);
 }
 
 void Engine::init() {
     Explosion::LoadTexture(renderer);
-    initGame();
+    gameState = GameState::LOADING;
 }
 
 void Engine::initGame() {
@@ -36,8 +48,9 @@ void Engine::initGame() {
         asteroids.emplace_back(renderer, player.getPosition());
     }
 
+    lives = PLAYER_STARTING_LIVES;
+    respawnTimer = 0.0f;
     player.respawn({SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f}, false);
-
     gameState = GameState::PLAYING;
 }
 
@@ -49,11 +62,14 @@ void Engine::handleGlobalInput(const SDL_Event& event, const bool* keyboardState
             quitEvent.type = SDL_EVENT_QUIT;
             SDL_PushEvent(&quitEvent);
         }
+        else if (gameState == GameState::LOADING) {
+                if (event.key.key == SDLK_SPACE) {  
+                initGame();
+            }
+        }
         else if (gameState == GameState::GAMEOVER) {
                 if (event.key.key == SDLK_SPACE) {  
                 initGame();
-                lives = PLAYER_STARTING_LIVES;
-                respawnTimer = 0.0f;
             }
         }
         else if (gameState == GameState::PLAYING) {
@@ -72,21 +88,24 @@ void Engine::handleGlobalInput(const SDL_Event& event, const bool* keyboardState
 
 void Engine::update(float deltaTime) {
     // std::cout << "Player Updating" << std::endl;
-    player.update(deltaTime);
-    if (firing && bullets.size() < 3) {
-        fireBullet();
-    }
-    if (!player.isAlive()) {
-        // waiting to respawn
-        if (lives >= 0) { 
-            respawnTimer -= deltaTime;
-            if (respawnTimer <= 0.0f) {
-                player.respawn({SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f}, true);
-            }
+    if (gameState == GameState::PLAYING) {
+        player.update(deltaTime);
+        if (firing && bullets.size() < 3) {
+            fireBullet();
         }
-    } else {
-        collisionCheck();
+        if (!player.isAlive()) {
+            // waiting to respawn
+            if (lives >= 0) { 
+                respawnTimer -= deltaTime;
+                if (respawnTimer <= 0.0f) {
+                    player.respawn({SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f}, true);
+                }
+            }
+        } else {
+            collisionCheck();
+        }
     }
+
     for (auto it = bullets.begin(); it != bullets.end();) {
         it->update(deltaTime);
         if (!it->isAlive()) {
@@ -95,6 +114,7 @@ void Engine::update(float deltaTime) {
             ++it;
         }
     }
+
     for (auto& asteroid : asteroids) {
         asteroid.update(deltaTime);
     }
@@ -138,46 +158,57 @@ void Engine::update(float deltaTime) {
             ++bulletIt;
         }
     }
-
     debugHUD.update(deltaTime);
 }
 
 void Engine::render() {
-    // std::cout << "Engine Rendering" << std::endl;
-    // background
     SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255); // Clear color
     SDL_RenderClear(renderer);
-
-    player.render();
-    // std::cout << "After Player Render" << std::endl;
-
-    for (auto& bullet : bullets) {
-        bullet.render(renderer);
-    }
-
-    for (const auto& asteroid : asteroids) {
-        asteroid.render();
-    }
-
-    // std::cout << "After asteroids render" << std::endl;
-    for (const auto& explosion : explosions) {
-        explosion->draw();
-    }
-
-    // std::cout << "After explosions render" << std::endl;
-    for (auto it = explosions.begin(); it != explosions.end(); ) {
-        if ((*it)->isFinished()) {
-            it = explosions.erase(it);  // erase returns the next iterator
-        } else {
-            ++it;
+    if (gameState == GameState::LOADING) {
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+        SDL_FRect destRect;
+        destRect.w = 200; // width you want
+        destRect.h = 200; // height you want
+        destRect.x = (SCREEN_WIDTH - destRect.w) / 2;  // center horizontally
+        destRect.y = SCREEN_HEIGHT / 3;                // some vertical offset
+        SDL_RenderTexture(renderer, avatarTexture, nullptr, &destRect);
+        loadingFont.display("Press [SPACE] to Start", SCREEN_WIDTH / 2.75f, SCREEN_HEIGHT / 1.7f, 255, 255, 255, 255);
+        titleFont.display("HuMaN AiMbOt", SCREEN_WIDTH / 13.0f, SCREEN_HEIGHT / 3.0f, 0, 255, 0, 255);
+        instructionsFont.display("Arrow Keys Move          Space Fires.", SCREEN_WIDTH / 3.1f, SCREEN_HEIGHT / 1.1f, 255, 255, 255, 255);
+    } else {
+        if (gameState == GameState::PLAYING) {
+            player.render();
         }
-    }
 
-    // std::cout << "After explosions removal" << std::endl;
-    debugHUD.render();
+        for (auto& bullet : bullets) {
+            bullet.render(renderer);
+        }
 
-    if (gameState == GameState::GAMEOVER) {
-        gameOverFont.display("GAME OVER", SCREEN_WIDTH / 4.0f, SCREEN_HEIGHT / 3.0f, 255, 0, 0, 255);
+        for (const auto& asteroid : asteroids) {
+            asteroid.render();
+        }
+
+        // std::cout << "After asteroids render" << std::endl;
+        for (const auto& explosion : explosions) {
+            explosion->draw();
+        }
+
+        // std::cout << "After explosions render" << std::endl;
+        for (auto it = explosions.begin(); it != explosions.end(); ) {
+            if ((*it)->isFinished()) {
+                it = explosions.erase(it);  // erase returns the next iterator
+            } else {
+                ++it;
+            }
+        }
+
+        // std::cout << "After explosions removal" << std::endl;
+        debugHUD.render();
+
+        if (gameState == GameState::GAMEOVER) {
+            gameOverFont.display("GAME OVER", SCREEN_WIDTH / 4.0f, SCREEN_HEIGHT / 3.0f, 255, 0, 0, 255);
+        }
     }
 
     SDL_RenderPresent(renderer);

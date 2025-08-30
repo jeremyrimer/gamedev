@@ -12,7 +12,8 @@
 
 enum class GameState {
     PLAYING,
-    GAMEOVER
+    GAMEOVER,
+    LOADING
 };
 
 class Engine {
@@ -31,7 +32,11 @@ public:
 private:
     SDL_Renderer* renderer;
     Text gameOverFont;
+    Text loadingFont;
+    Text titleFont;
+    Text instructionsFont;
     DebugHUD debugHUD;
+    SDL_Texture* avatarTexture;
     
     Player player;
     std::vector<Asteroid> asteroids;
@@ -41,7 +46,7 @@ private:
     float respawnTimer;
     bool firing = false;
     bool wasFiringLastTick = false;
-    GameState gameState = GameState::PLAYING;
+    GameState gameState = GameState::LOADING;
     Audio bulletSound;
 
     void collisionCheck();
