@@ -24,12 +24,12 @@ Engine::Engine(SDL_Renderer* renderer)
       bulletSound(Audio("assets/sound/blaster.wav"))  {
         bulletSound.setVolume(0.2f);
 
-        SDL_Surface* surface = IMG_Load("assets/images/human_aimbot_avatar.png");
-        avatarTexture = SDL_CreateTextureFromSurface(renderer, surface);
+        SDL_Surface* avatarSurface = IMG_Load("assets/images/human_aimbot_avatar.png");
+        avatarTexture = SDL_CreateTextureFromSurface(renderer, avatarSurface);
         if (!avatarTexture) {
             throw std::runtime_error("Failed to load Human Aimbot Avatar image!");
         }
-        SDL_DestroySurface(surface);
+        SDL_DestroySurface(avatarSurface);
       }
 
 // Destructor
