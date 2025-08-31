@@ -49,6 +49,7 @@ void Engine::initGame() {
     spawnAsteroidsForRound();
 
     score = 0;
+    round = 1;
     lives = PLAYER_STARTING_LIVES;
     respawnTimer = 0.0f;
     player.respawn({SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f}, false);
