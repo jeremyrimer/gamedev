@@ -40,7 +40,6 @@ void Player::update(float deltaTime) {
     if (shuttingDown) return;
 
     if (!alive) {
-        thrusterSound.stop();
         return; // Bail early
     }
     if (invincible) {
@@ -153,6 +152,11 @@ void Player::respawn(Vector2 pos, bool startInvincible) {
     if (startInvincible) {
         invincibilityTimer = 3.0f; 
     }
+}
+
+void Player::death() {
+    setAlive(false);
+    thrusterSound.stop();
 }
 
 Vector2 Player::getPosition() const {

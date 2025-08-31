@@ -22,6 +22,7 @@ public:
     bool isInvincible() const;
     void respawn(Vector2 pos, bool startInvincible);
     void shutdown(); 
+    void death();
 
 private:
     SDL_Renderer* renderer;

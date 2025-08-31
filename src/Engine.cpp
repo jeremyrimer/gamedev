@@ -44,16 +44,14 @@ void Engine::init() {
 }
 
 void Engine::initGame() {
-    asteroids.clear();
-
-    spawnAsteroidsForRound();
-
     score = 0;
     round = 1;
     lives = PLAYER_STARTING_LIVES;
     respawnTimer = 0.0f;
     player.respawn({SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f}, false);
     gameState = GameState::PLAYING;
+    asteroids.clear();
+    spawnAsteroidsForRound();
 }
 
 void Engine::handleGlobalInput(const SDL_Event& event, const bool* keyboardState) {
@@ -292,7 +290,7 @@ void Engine::collisionCheck() {
 
 void Engine::handlePlayerDeath() {
     if (player.isAlive()) {
-        player.setAlive(false);
+        player.death();
         // EXPLODE
         explosions.emplace_back(
             std::make_unique<Explosion>(
