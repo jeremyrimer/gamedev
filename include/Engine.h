@@ -40,15 +40,18 @@ private:
     std::vector<Asteroid> asteroids;
     std::vector<std::unique_ptr<Explosion>> explosions;
     std::vector<Bullet> bullets;
+    GameState gameState = GameState::LOADING;
+    Audio bulletSound;
+    SDL_Gamepad* gamepad = nullptr;
+
     int lives;
     int score = 0;
     int round = 1;
     float respawnTimer;
     bool firing = false;
     bool wasFiringLastTick = false;
-    GameState gameState = GameState::LOADING;
-    Audio bulletSound;
 
+    void initController();
     void spawnAsteroidsForRound();
     void collisionCheck();
     bool circleRectangleCollision(const Vector2& circleCenter, float circleRadius,

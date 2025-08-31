@@ -65,7 +65,7 @@ bool init(SDL_Window*& window, SDL_Renderer*& renderer) {
     } 
     std::cout << "Human Aimbot Icon Loaded" << std::endl; 
 
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD) < 0) {
         std::cerr << "SDL3 Init failed: " << SDL_GetError() << "\n";
         return false;
     }

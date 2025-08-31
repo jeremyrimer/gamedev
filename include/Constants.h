@@ -25,3 +25,4 @@ constexpr float BULLET_RADIUS = 2.0f;
 constexpr int LARGE_ASTEROID_SCORE = 100;
 constexpr int MEDIUM_ASTEROID_SCORE = 300;
 constexpr int SMALL_ASTEROID_SCORE = 500;
+constexpr int MAX_BULLETS_FIRED = 3;
