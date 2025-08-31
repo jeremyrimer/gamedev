@@ -26,9 +26,6 @@ public:
     void update(float deltaTime);
     void render();
     void shutdown();
-
-    static SDL_Texture* texture; // Shared by all explosions
-
 private:
     SDL_Renderer* renderer;
     Text gameOverFont;
