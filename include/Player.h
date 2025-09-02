@@ -24,9 +24,11 @@ public:
     void shutdown(); 
     void death();
 
+    static SDL_Texture* playerTexture;
+    void initPlayerTexture(SDL_Renderer* renderer);
+
 private:
     SDL_Renderer* renderer;
-    SDL_Texture* texture;
 
     Vector2 position;  // Center of ship
     Vector2 size;      // Width and height

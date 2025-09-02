@@ -30,6 +30,8 @@ Engine::Engine(SDL_Renderer* renderer)
             throw std::runtime_error("Failed to load Human Aimbot Avatar image!");
         }
         SDL_DestroySurface(avatarSurface);
+
+        player.initPlayerTexture(renderer);
       }
 
 // Destructor
@@ -169,8 +171,8 @@ void Engine::update(float deltaTime) {
 }
 
 void Engine::renderScore() const {
-    scoreFont.display("LEVEL: " + std::to_string(round), 200, 10, 255, 255, 255, 255);
-    scoreFont.display(std::to_string(score), SCREEN_WIDTH - 200, 10, 255, 255, 255, 255);
+    scoreFont.display("LEVEL: " + std::to_string(round), 100, 10, 255, 255, 255, 255);
+    scoreFont.display(std::to_string(score), SCREEN_WIDTH - 150, 10, 255, 255, 255, 255);
 }
 
 void Engine::render() {
@@ -227,6 +229,20 @@ void Engine::render() {
         if (gameState == GameState::PLAYING && asteroids.empty()) {
             round++;                      // increment round
             spawnAsteroidsForRound();     // spawn next round
+        }
+
+        if (gameState != GameState::GAMEOVER) {
+            for (int i = 0; i < lives; i++) {
+                SDL_FRect dest;
+                dest.w = PLAYER_SIZE.x / 1.5;
+                dest.h = PLAYER_SIZE.y / 1.5;
+                dest.x = SCREEN_WIDTH - 150.0f + (i * PLAYER_SIZE.x / 1.5 + 20.0f);
+                dest.y = SCREEN_HEIGHT - 50.0f;
+
+                SDL_FPoint center = { PLAYER_SIZE.x / 1.5 / 2, PLAYER_SIZE.y / 1.5 / 2 };
+
+                SDL_RenderTextureRotated(renderer, Player::playerTexture, nullptr, &dest, 0.0f, &center, SDL_FLIP_NONE);
+            }
         }
     }
 

@@ -5,6 +5,8 @@
 #include <iostream>
 #include <cmath>
 
+SDL_Texture* Player::playerTexture = nullptr;
+
 Player::Player(SDL_Renderer* renderer)
     : renderer(renderer),
       angle(PLAYER_STARTING_ANGLE),
@@ -17,16 +19,22 @@ Player::Player(SDL_Renderer* renderer)
       invincible(false),
       shuttingDown(false) {
     
-    SDL_Surface* surface = IMG_Load("assets/images/player-ship.png");
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if (!texture) {
-        throw std::runtime_error("Failed to load Player Ship image!");
-    }
-    SDL_DestroySurface(surface);
+    initPlayerTexture(renderer);
 
-    size = Vector2(32, 32);
+    size = PLAYER_SIZE;
     position = Vector2(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f);
     velocity = Vector2(0, 0);
+}
+
+void Player::initPlayerTexture(SDL_Renderer* renderer) {
+    if (!playerTexture) {
+        SDL_Surface* surface = IMG_Load("assets/images/player-ship.png");
+        playerTexture = SDL_CreateTextureFromSurface(renderer, surface);
+        if (!playerTexture) {
+            throw std::runtime_error("Failed to load Player Ship image!");
+        }
+        SDL_DestroySurface(surface);
+    }
 }
 
 void Player::handleInput(const bool* keystates) {
@@ -108,7 +116,7 @@ void Player::render() {
     dest.y = position.y - size.y / 2;
 
     SDL_FPoint center = { size.x / 2, size.y / 2 };
-    SDL_RenderTextureRotated(renderer, texture, nullptr, &dest, angle, &center, SDL_FLIP_NONE);
+    SDL_RenderTextureRotated(renderer, playerTexture, nullptr, &dest, angle, &center, SDL_FLIP_NONE);
 
     if (thrusting) {
         renderThruster();
@@ -182,6 +190,6 @@ bool Player::isInvincible() const {
 void Player::shutdown() {
     shuttingDown = true;
     thrusterSound.stop();
-    SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(playerTexture);
     SDL_Delay(10);
 }

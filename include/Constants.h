@@ -1,6 +1,7 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include "Vector2.h"
 
 // helpers
 #define DEG2RAD(angleDegrees) (((angleDegrees) - 90.0f) * M_PI / 180.0f)
@@ -20,6 +21,7 @@ constexpr float RESPAWN_DELAY = 3.0f; // seconds
 constexpr float BULLET_SPEED = 600.0f;
 constexpr float BULLET_LIFE_SPAN = 1.0f; // seconds
 constexpr float BULLET_RADIUS = 2.0f;
+constexpr Vector2 PLAYER_SIZE = Vector2(32, 32);
 
 // Game Settings
 constexpr int LARGE_ASTEROID_SCORE = 100;
