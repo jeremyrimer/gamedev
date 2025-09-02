@@ -26,8 +26,8 @@ mkdir %DIST_DIR%
 echo Copying game executable...
 copy %BUILD_DIR%\%PROJECT_NAME%.exe %DIST_DIR%\
 
-:: === COPY SDL DLLs ===
-echo Copying SDL3 DLLs...
+:: === COPY DLLs ===
+echo Copying DLLs...
 copy "%BUILD_DIR%\*.dll" %DIST_DIR%
 
 :: === COPY ASSETS ===

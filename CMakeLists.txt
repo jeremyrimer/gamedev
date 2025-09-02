@@ -9,6 +9,7 @@ set(SDL3_IMAGE_ROOT "C:/programming/libs/SDL_image")
 set(SDL3_TTF_ROOT "C:/programming/libs/SDL_ttf")
 set(INSTALL_DIR "C:/programming/libs/install")
 set(BACKWARD_DIR "C:/programming/libs/backward-cpp")
+set(MINGW_DIR "C:/programming/libs/mingw64/bin")
 
 # Add include and lib paths
 link_directories(${SDL3_ROOT}/lib)
@@ -44,5 +45,8 @@ add_custom_command(TARGET HumanAimbot POST_BUILD
     "${SDL3_ROOT}/bin/SDL3.dll"
     "${SDL3_IMAGE_ROOT}/build/SDL3_image.dll"
     "${INSTALL_DIR}/bin/SDL3_ttf.dll"
+    "${MINGW_DIR}/libstdc++-6.dll"
+    "${MINGW_DIR}/libgcc_s_seh-1.dll"
+    "${MINGW_DIR}/libwinpthread-1.dll"
     $<TARGET_FILE_DIR:HumanAimbot>
 )

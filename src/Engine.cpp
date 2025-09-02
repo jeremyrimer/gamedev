@@ -65,22 +65,23 @@ void Engine::handleGlobalInput(const SDL_Event& event, const bool* keyboardState
             SDL_PushEvent(&quitEvent);
         }
         else if (gameState == GameState::LOADING) {
-                if (event.key.key == SDLK_SPACE) {  
+                if (event.key.key == SDLK_RETURN) {  
                 initGame();
             }
         }
         else if (gameState == GameState::GAMEOVER) {
-                if (event.key.key == SDLK_SPACE) {  
+                if (event.key.key == SDLK_RETURN) {  
                 initGame();
             }
         }
         else if (gameState == GameState::PLAYING) {
             if (event.type == SDL_EVENT_KEY_DOWN && 
                 event.key.key == SDLK_SPACE && 
-                bullets.size() < 3 &&
                 player.isAlive()
             ) {
                 firing = true;
+            } else {
+                firing = false;
             }
             player.handleInput(keyboardState);
         }
@@ -92,7 +93,7 @@ void Engine::update(float deltaTime) {
     // std::cout << "Player Updating" << std::endl;
     if (gameState == GameState::PLAYING) {
         player.update(deltaTime);
-        if (firing && bullets.size() < 3) {
+        if (firing && bullets.size() < MAX_BULLETS_FIRED) {
             fireBullet();
         }
         if (!player.isAlive()) {
@@ -187,9 +188,9 @@ void Engine::render() {
         destRect.x = (SCREEN_WIDTH - destRect.w) / 2;  // center horizontally
         destRect.y = SCREEN_HEIGHT / 3;                // some vertical offset
         SDL_RenderTexture(renderer, avatarTexture, nullptr, &destRect);
-        loadingFont.display("Press [SPACE] to Start", SCREEN_WIDTH / 2.75f, SCREEN_HEIGHT / 1.7f, 255, 255, 255, 255);
+        loadingFont.display("Press [ENTER] to Start", SCREEN_WIDTH / 2.75f, SCREEN_HEIGHT / 1.7f, 255, 255, 255, 255);
         titleFont.display("HuMaN AiMbOt", SCREEN_WIDTH / 13.0f, SCREEN_HEIGHT / 3.0f, 0, 255, 0, 255);
-        instructionsFont.display("Arrow Keys to Move          Space to Fire", SCREEN_WIDTH / 3.3f, SCREEN_HEIGHT / 1.1f, 255, 255, 255, 255);
+        instructionsFont.display("[ARROWS] to Move          [SPACE] to Fire", SCREEN_WIDTH / 3.3f, SCREEN_HEIGHT / 1.1f, 255, 255, 255, 255);
     } else {
         renderScore();
         if (gameState == GameState::PLAYING) {
@@ -223,7 +224,7 @@ void Engine::render() {
 
         if (gameState == GameState::GAMEOVER) {
             gameOverFont.display("GAME OVER", SCREEN_WIDTH / 4.0f, SCREEN_HEIGHT / 3.0f, 255, 0, 0, 255);
-            instructionsFont.display("Press [SPACE] to Play Again", SCREEN_WIDTH / 2.7f, SCREEN_HEIGHT / 2.0f, 255, 255, 255, 255);
+            instructionsFont.display("Press [ENTER] to Play Again", SCREEN_WIDTH / 2.7f, SCREEN_HEIGHT / 2.0f, 255, 255, 255, 255);
         }
 
         if (gameState == GameState::PLAYING && asteroids.empty()) {
